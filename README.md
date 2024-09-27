@@ -14,6 +14,7 @@ I value good, ethical teamwork—people who talk and communicate through problem
 what contribution can be expected from me on this project?
 Whatever is asked of me to be done will be done. I will try to get it to close to, if not, perfection to the best of my ability.
 
+Projects can fail because of the people in the team and their inabiity to gel and communicate; that will not happen as Nathan and I wil keep eachother responsible.
 
 Nathan:
 
