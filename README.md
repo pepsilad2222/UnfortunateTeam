@@ -14,7 +14,7 @@ I value good, ethical teamwork—people who talk and communicate through problem
 what contribution can be expected from me on this project?
 Whatever is asked of me to be done will be done. I will try to get it to close to, if not, perfection to the best of my ability.
 
-Projects can fail because of the people in the team and their inabiity to gel and communicate; that will not happen as Nathan and I wil keep eachother responsible.
+Projects can fail because of the people in the team and their inabiity to gel and communicate; that will not happen as Nathan and I will keep eachother responsible.
 
 Nathan:
 
@@ -33,5 +33,5 @@ This allows people in the team to be able to find solutions quicker than if they
 what contribution can be expected from me on this project?
 The group can expect me to be able to keep things organized and be able to split up the goals that we need to achieve. Also working on coding the actual pieces of the project.
 
-
+In terms of making sure to not have this project fail, I will help the team by keeping us on track to not be late and to be able to map out each goal small enough to be easily accomplished.
 
