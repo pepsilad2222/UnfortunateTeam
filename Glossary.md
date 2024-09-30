@@ -1,4 +1,5 @@
 Glossary:
+
 Parser – Handles user input, interpreting commands and translating them into game actions.
 
 Game State – Manages the current status of the game, including player progress, locations, and inventory.
