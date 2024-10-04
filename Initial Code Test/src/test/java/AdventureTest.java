@@ -8,7 +8,7 @@ public class AdventureTest {
 
     @Before
     public void initialization() {
-        adventure = new Adventure("Sir Lancelot"); // Initialize with knight's name
+        adventure = new Adventure("Sir Blee"); // Initialize with knight's name
     }
 
     @Test
