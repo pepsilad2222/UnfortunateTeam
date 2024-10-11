@@ -1,38 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
-
-
-class Enemy {
-    String name;
-    int health;
-    int attackPower;
-
-    public Enemy(String name, int health, int attackPower) {
-        this.name = name;
-        this.health = health;
-        this.attackPower = attackPower;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getHealth() {
-        return health;
-    }
-
-    public void takeDamage(int damage) {
-        this.health -= damage;
-    }
-
-    public int getAttackPower() {
-        return attackPower;
-    }
-}
-
+import java.util.*;
 
 class Item {
     String name;
@@ -78,192 +44,282 @@ class HealingPotion extends Item {
     }
 }
 
+class Enemy {
+    String name;
+    int health;
+    int attackPower;
+
+    public Enemy(String name, int health, int attackPower) {
+        this.name = name;
+        this.health = health;
+        this.attackPower = attackPower;
+    }
+
+    public void takeDamage(int damage) {
+        health -= damage;
+        if (health <= 0) {
+            System.out.println(name + " has been defeated!");
+        }
+    }
+
+    public boolean isAlive() {
+        return health > 0;
+    }
+}
+
 class Room {
     String description;
     int healthChange;
     Enemy enemy;
     Item item;
     int roomNumber;
-    int[] doors; // Array to hold room connections (0 = no connection)
+    int[] doors; 
     boolean visited;
+    String roomMaster;
+    boolean masterDefeated;
 
-    public Room(String description, int healthChange, Enemy enemy, Item item, int roomNumber, int[] doors) {
+    public Room(String description, int healthChange, Enemy enemy, Item item, int roomNumber, int[] doors, String roomMaster) {
         this.description = description;
         this.healthChange = healthChange;
-        this.enemy = enemy;
+        this.enemy = enemy; 
         this.item = item;
         this.roomNumber = roomNumber;
         this.doors = doors;
         this.visited = false;
+        this.roomMaster = roomMaster;
+        this.masterDefeated = false;
     }
 }
 
-public class PathDungeon {
-    public static int lifeChecker = 100;
+public class DungeonPath {
+    public Room currentRoom; 
+    public int lifeChecker = 100;
     public int roomCount = 0;
     public String knightName;
     public Set<Integer> visitedRooms;
-    private List<Room> rooms;
-    private List<Item> inventory;
-    private int inventoryWeightLimit = 50;
-    private int currentInventoryWeight = 0;
+    public List<Room> rooms;
+    public List<Item> inventory;
+    public Set<Weapon> weapons; // Set to avoid duplicate weapons
+    public List<Item> healingPotions; // List for healing potions
+    public int inventoryWeightLimit = 50; // Maximum weight limit
+    public int currentInventoryWeight = 0; // Current weight of the inventory
     private Scanner scanner;
+    
 
-    public PathDungeon(String knightName) {
+    public DungeonPath(String knightName) {
         this.knightName = knightName;
         lifeChecker = 100;
         visitedRooms = new HashSet<>();
         rooms = createRooms();
-        inventory = new ArrayList<>();
+        weapons = new HashSet<>(); // Initialize the weapons set
+        healingPotions = new ArrayList<>(); // Initialize the healing potions list
         scanner = new Scanner(System.in);
-
-        // Start with a sword in the inventory
-        Weapon startingSword = new Weapon("Knight's Sword", 10, 15);
-        addToInventory(startingSword);
     }
-
+    
     private List<Room> createRooms() {
         List<Room> roomList = new ArrayList<>();
         HealingPotion healingPotion = new HealingPotion("Healing Potion", 5, 20);
-
-        Enemy orc = new Enemy("Orc", 30, 10); // Enemy with 30 health and 10 attack power
-
-
-        // Room 1: Entrance to the castle
-        roomList.add(new Room("You stumble through the dense forest and find a mysterious castle.", 0, null, null, 1, new int[]{2, 0, 0, 0}));
-
-        // Room 2: Dungeon entrance after forced entry
-        roomList.add(new Room("You are at the entrance of the dungeon. In the corner of the room is a healing potion.", 0, null, healingPotion, 2, new int[]{3, 1, 0, 0}));
-
-        // Room 3: Inside the dungeon
-        //roomList.add(new Room("Deeper in the dungeon, you see a gleaming sword in the corner.", 0, enemy:null, null, 3, new int[]{0, 2, 0, 0}));
-        roomList.add(new Room("You are in the dungeon. In the corner of the room is an orc. He hits you, taking 5 HP away!", -5, orc, null, 3, new int[]{3, 1, 0, 0}));
-
+        Weapon sword = new Weapon("Sword", 10, 15); // Example weapon
+    
+        roomList.add(new Room("You stumble through the dense forest and find a mysterious castle.", 0, null, null, 1, new int[]{2, 0, 0, 0}, "Forest Guardian"));
+        roomList.add(new Room("You are at the entrance of the dungeon. In the corner of the room is a healing potion.", 0, null, healingPotion, 2, new int[]{3, 1, 0, 0}, "Dungeon Keeper"));
+        roomList.add(new Room("Deeper in the dungeon, you see a gleaming sword in the corner.", 0, new Enemy("Goblin", 30, 5), sword, 3, new int[]{0, 2, 0, 0}, "Goblin King"));
+        roomList.add(new Room("A dark room filled with eerie noises.", 0, new Enemy("Skeleton Warrior", 20, 3), null, 4, new int[]{0, 3, 0, 0}, "Skeleton Warrior"));
+        roomList.add(new Room("The air is thick with the stench of decay.", 0, new Enemy("Vampire Lord", 40, 8), null, 5, new int[]{0, 4, 0, 0}, "Vampire Lord"));
+        roomList.add(new Room("You see flickering lights in the distance.", 0, new Enemy("Zombie Overlord", 25, 4), null, 6, new int[]{0, 5, 0, 0}, "Zombie Overlord"));
+        roomList.add(new Room("The walls are covered in strange symbols.", 0, new Enemy("Lich", 50, 6), null, 7, new int[]{0, 6, 0, 0}, "Lich"));
+        roomList.add(new Room("You hear distant growls echoing in the chamber.", 0, new Enemy("Dragon", 80, 10), null, 8, new int[]{0, 7, 0, 0}, "Dragon"));
+        roomList.add(new Room("A grand room with a throne at its center.", 0, new Enemy("Dark Sorcerer", 60, 12), null, 9, new int[]{0, 8, 0, 0}, "Dark Sorcerer"));
+        roomList.add(new Room("You enter the final room, the lair of the ultimate evil.", 0, new Enemy("Shadow Titan", 100, 15), null, 10, new int[]{0, 9, 0, 0}, "Shadow Titan"));
 
         return roomList;
     }
 
     public void startAdventure() {
         System.out.println("Welcome, " + knightName + "!");
-        System.out.println("Your adventure begins...");
-        enterRoom();
+        System.out.println("Your adventure begins in the forest...");
+        handleForestNavigation();
+    }
+
+    private void handleForestNavigation() {
+        System.out.println("You are in a dense forest. To find your way out, you must navigate through.");
+        String correctPath = "north north east east west west north"; 
+        String[] correctSteps = correctPath.split(" ");
+        List<String> playerPath = new ArrayList<>(); 
+
+        int progress = 0; 
+
+        while (true) {
+            System.out.println("Available directions: 1: North, 2: South, 3: East, 4: West");
+            System.out.println("Choose a direction:");
+            int direction = getUserInput();
+
+            String directionStr = switch (direction) {
+                case 1 -> "north";
+                case 2 -> "south";
+                case 3 -> "east";
+                case 4 -> "west";
+                default -> {
+                    System.out.println("Invalid choice.");
+                    yield "";
+                }
+            };
+
+            if (!directionStr.isEmpty()) {
+                if (playerPath.contains(directionStr)) {
+                    System.out.println("You remember that you've already visited here before.");
+                }
+
+                if (directionStr.equals(correctSteps[progress])) {
+                    System.out.println("You feel like you're heading in the right direction.");
+                    playerPath.add(directionStr);
+                    progress++;
+                } else {
+                    System.out.println("Something feels wrong, you might be lost...");
+                }
+
+                if (progress == correctSteps.length) {
+                    System.out.println("You have successfully navigated through the forest!");
+                    roomCount = 1; 
+                    enterRoom();
+                    break; 
+                }
+            }
+        }
     }
 
     public void enterRoom() {
         Room currentRoom = rooms.get(roomCount);
-        if (!visitedRooms.contains(currentRoom.roomNumber)) {
-            visitedRooms.add(currentRoom.roomNumber);
+        
+        if (visitedRooms.contains(currentRoom.roomNumber)) {
+            System.out.println("You have already visited this room.");
+        } else {
+            visitedRooms.add(currentRoom.roomNumber); 
+            System.out.println("\nRoom " + currentRoom.roomNumber + ":\n");
+            System.out.println(currentRoom.description);
+        
+            if (currentRoom.item != null) {
+                System.out.println("In the room, you see a " + currentRoom.item.getName() + ".");
+            }
+        
+            if (currentRoom.healthChange != 0) {
+                lifeChecker += currentRoom.healthChange;
+            }
+        
+            System.out.println("Your current health is: " + lifeChecker + " HP.");
+            System.out.println("Current inventory weight: " + currentInventoryWeight + "/" + inventoryWeightLimit + " kg.");
+        
+            if (lifeChecker <= 0) {
+                System.out.println("You have died. Game Over.");
+                System.exit(0);
+            }
+        
+            if (currentRoom.enemy != null && !currentRoom.masterDefeated) {
+                engageRoomMaster(currentRoom);
+            } else {
+                handleRoomActions(currentRoom);
+            }
         }
+    }
+    
+    public void engageRoomMaster(Room currentRoom) {
+        System.out.println("You have encountered the " + currentRoom.enemy.name + "!");
+        while (currentRoom.enemy.isAlive() && lifeChecker > 0) {
+            System.out.println("What would you like to do?");
+            System.out.println("1: Attack");
+            System.out.println("2: Use Healing Potion");
+            System.out.println("3: Flee");
 
-        System.out.println("\nRoom " + currentRoom.roomNumber + ":\n");
-        System.out.println(currentRoom.description);
+            int choice = getUserInput();
 
-        if (roomCount == 0) {
-            // If the player is in the castle entrance, prompt them to enter the dungeon
-            promptForDungeonEntry();
+            switch (choice) {
+                case 1:
+                    int damageDealt = 15; 
+                    currentRoom.enemy.takeDamage(damageDealt);
+                    System.out.println("You attacked the " + currentRoom.enemy.name + " for " + damageDealt + " damage!");
+                    if (!currentRoom.enemy.isAlive()) {
+                        currentRoom.masterDefeated = true; 
+                        System.out.println("You defeated the " + currentRoom.enemy.name + "!");
+                        break; 
+                    }
+                    lifeChecker -= currentRoom.enemy.attackPower;
+                    System.out.println("The " + currentRoom.enemy.name + " attacked you for " + currentRoom.enemy.attackPower + " damage!");
+                    break;
+                case 2:
+                    useHealingPotion();
+                    break;
+                case 3:
+                    System.out.println("You fled from the battle!");
+                    return;
+                default:
+                    System.out.println("Invalid choice.");
+            }
+            if (lifeChecker <= 0) {
+                System.out.println("You have died. Game Over.");
+                System.exit(0);
+            }
+            System.out.println("Your current health is: " + lifeChecker + " HP.");
         }
-
-        if (currentRoom.item != null) {
-            System.out.println("In the room, you see a " + currentRoom.item.getName() + ".");
-        }
-
-        if (currentRoom.healthChange != 0) {
-            lifeChecker += currentRoom.healthChange;
-        }
-
-        System.out.println("Your current health is: " + lifeChecker + " HP.");
-        System.out.println("Current inventory weight: " + currentInventoryWeight + "/" + inventoryWeightLimit + " kg.");
-
-        if (lifeChecker <= 0) {
-            System.out.println("You have died. Game Over.");
-            System.exit(0);
-        }
-
         handleRoomActions(currentRoom);
     }
 
-    private void promptForDungeonEntry() {
-        System.out.println("You see a massive dungeon entrance before you. Will you enter? (1: Yes, 2: No)");
-
-        // No matter what they choose, they are forced to enter the dungeon
-        getUserInput(); // Removed the 'choice' variable
-        System.out.println("You feel a mysterious force pull you into the dungeon...");
-        roomCount = 1; // Move to the dungeon entrance (Room 2)
-        enterRoom(); // Automatically enter the dungeon
-    }
-
-    private void handleRoomActions(Room currentRoom) {
+    public void handleRoomActions(Room currentRoom) {
         if (currentRoom.item != null) {
-            System.out.println("Do you want to pick up the " + currentRoom.item.getName() + "? (1: Yes, 2: No)");
-            int choice = getUserInput();
-            if (choice == 1) {
-                addToInventory(currentRoom.item);
-                currentRoom.item = null;
+            pickUpItem(currentRoom);
+        }
+        roomCount++;
+        if (roomCount < rooms.size()) {
+            enterRoom();
+        } else {
+            System.out.println("You have completed your adventure!");
+        }
+    }
+    
+
+    public void pickUpItem(Room currentRoom) {
+        if (currentRoom.item instanceof HealingPotion) {
+            if (currentInventoryWeight + currentRoom.item.getWeight() <= inventoryWeightLimit) {
+                healingPotions.add(currentRoom.item);
+                currentInventoryWeight += currentRoom.item.getWeight();
+                System.out.println("You have picked up a " + currentRoom.item.getName() + ".");
+                currentRoom.item = null; 
+            } else {
+                System.out.println("You can't carry any more weight!");
+            }
+        } else if (currentRoom.item instanceof Weapon) {
+            Weapon weapon = (Weapon) currentRoom.item;
+            if (weapons.size() < 1 && currentInventoryWeight + weapon.getWeight() <= inventoryWeightLimit) {
+                weapons.add(weapon);
+                currentInventoryWeight += weapon.getWeight();
+                System.out.println("You have picked up a " + weapon.getName() + ".");
+                currentRoom.item = null; 
+            } else {
+                System.out.println("You can't carry any more weight or already have a weapon!");
             }
         }
-
-        System.out.println("Available directions:");
-        if (currentRoom.doors[0] != 0) System.out.println("1: North");
-        if (currentRoom.doors[1] != 0) System.out.println("2: South");
-        if (currentRoom.doors[2] != 0) System.out.println("3: East");
-        if (currentRoom.doors[3] != 0) System.out.println("4: West");
-
-        System.out.println("Choose a direction:");
-        int direction = getUserInput();
-        movePlayer(currentRoom, direction);
     }
+    
 
-    private void movePlayer(Room currentRoom, int direction) {
-        int nextRoom = 0;
-        switch (direction) {
-            /*case 1 -> nextRoom = currentRoom.doors[0]; // North
-            case 2 -> nextRoom = currentRoom.doors[1]; // South
-            case 3 -> nextRoom = currentRoom.doors[2]; // East
-            case 4 -> nextRoom = currentRoom.doors[3]; // West
-            default -> System.out.println("Invalid choice."); */
-            
-                case 1:
-                    nextRoom = currentRoom.doors[0]; // North
-                    break;
-                case 2:
-                    nextRoom = currentRoom.doors[1]; // South
-                    break;
-                case 3:
-                    nextRoom = currentRoom.doors[2]; // East
-                    break;
-                case 4:
-                    nextRoom = currentRoom.doors[3]; // West
-                    break;
-                default:
-                    System.out.println("Invalid choice.");
-                    break;
-            
-            
+    public void useHealingPotion() {
+        for (Item item : inventory) {
+            if (item instanceof HealingPotion) {
+                HealingPotion potion = (HealingPotion) item;
+                lifeChecker += potion.getHealAmount();
+                System.out.println("You used a " + potion.getName() + " and healed for " + potion.getHealAmount() + " HP!");
+                inventory.remove(item);
+                currentInventoryWeight -= potion.getWeight();
+                return;
+            }
         }
-
-        if (nextRoom != 0) {
-            roomCount = nextRoom - 1;
-            enterRoom();
-        } else {
-            System.out.println("You cannot go that way.");
-            enterRoom();
-        }
-    }
-
-    private void addToInventory(Item item) {
-        if (currentInventoryWeight + item.getWeight() <= inventoryWeightLimit) {
-            inventory.add(item);
-            currentInventoryWeight += item.getWeight();
-            System.out.println("You picked up the " + item.getName() + ".");
-        } else {
-            System.out.println("You can't carry any more items.");
-        }
+        System.out.println("You have no healing potions in your inventory!");
     }
 
     private int getUserInput() {
         while (true) {
+            System.out.print("Enter your choice: ");
+            String input = scanner.nextLine();
             try {
-                return Integer.parseInt(scanner.nextLine());
+                return Integer.parseInt(input);
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a number.");
             }
@@ -271,11 +327,12 @@ public class PathDungeon {
     }
 
     public static void main(String[] args) {
-        System.out.print("Enter your knight name: ");
         Scanner input = new Scanner(System.in);
+        System.out.println("Enter your knight's name: ");
         String knightName = input.nextLine();
-        PathDungeon adventure = new PathDungeon(knightName);
-        adventure.startAdventure();
+        DungeonPath game = new DungeonPath(knightName);
+        game.startAdventure();
         input.close();
+        
     }
 }
