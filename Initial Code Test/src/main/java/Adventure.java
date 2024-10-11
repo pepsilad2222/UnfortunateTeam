@@ -22,13 +22,13 @@ public class Adventure {
             goRight();
         } else {
             System.out.println("Invalid choice.");
-            startAdventure();
+            
         }
     }
 
     private void goLeft() {
         System.out.println("You chose to go left. But this path is under construction. Please choose again.");
-        startAdventure(); // Loop back to the start for now
+        
     }
 
     private void goRight() {
@@ -37,8 +37,8 @@ public class Adventure {
         // Trigger PathDungeon
         System.out.print("Enter your knight's name: ");
         String knightName = scanner.nextLine();
-        PathDungeon dungeonAdventure = new PathDungeon(knightName); 
-        dungeonAdventure.startAdventure(); 
+        DungeonPath dungeonAdventure = new DungeonPath(knightName); 
+        dungeonAdventure.startAdventure(); // Start the dungeon adventure
     }
 
     private int getUserInput() {
