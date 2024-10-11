@@ -114,6 +114,25 @@ public class DungeonPath {
         weapons = new HashSet<>(); // Initialize the weapons set
         healingPotions = new ArrayList<>(); // Initialize the healing potions list
         scanner = new Scanner(System.in);
+        inventory = new ArrayList<>();
+    }
+
+    public void addToInventory(Item item) {
+        inventory.add(item);
+    }
+
+    // Method to get the total weight of the inventory
+    public int getInventoryWeight() {
+        int totalWeight = 0;
+        for (Item item : inventory) {
+            totalWeight += item.getWeight(); // Assume getWeight() returns the weight of the item
+        }
+        return totalWeight;
+    }
+
+    // Method to get the inventory (optional, for testing purposes)
+    public List<Item> getInventory() {
+        return inventory;
     }
     
     private List<Room> createRooms() {
@@ -224,24 +243,39 @@ public class DungeonPath {
     
     public void engageRoomMaster(Room currentRoom) {
         System.out.println("You have encountered the " + currentRoom.enemy.name + "!");
-        while (currentRoom.enemy.isAlive() && lifeChecker > 0) {
+        
+        if (currentRoom.masterDefeated) {
+            System.out.println("You have already defeated the " + currentRoom.enemy.name + "!");
+            return; // Exit if already defeated
+        }
+    
+        while (lifeChecker > 0) {
+            if (!currentRoom.enemy.isAlive()) {
+                System.out.println("You defeated the " + currentRoom.enemy.name + "!");
+                currentRoom.masterDefeated = true; // Set the room master as defeated
+                return; // Exit the method as the enemy is already defeated
+            }
+    
             System.out.println("What would you like to do?");
             System.out.println("1: Attack");
             System.out.println("2: Use Healing Potion");
             System.out.println("3: Flee");
-
+    
             int choice = getUserInput();
-
+    
             switch (choice) {
                 case 1:
                     int damageDealt = 15; 
                     currentRoom.enemy.takeDamage(damageDealt);
                     System.out.println("You attacked the " + currentRoom.enemy.name + " for " + damageDealt + " damage!");
+    
+                    // Check if the enemy is defeated after the attack
                     if (!currentRoom.enemy.isAlive()) {
-                        currentRoom.masterDefeated = true; 
                         System.out.println("You defeated the " + currentRoom.enemy.name + "!");
-                        break; 
+                        currentRoom.masterDefeated = true;
+                        return; // Exit the method
                     }
+    
                     lifeChecker -= currentRoom.enemy.attackPower;
                     System.out.println("The " + currentRoom.enemy.name + " attacked you for " + currentRoom.enemy.attackPower + " damage!");
                     break;
@@ -254,15 +288,19 @@ public class DungeonPath {
                 default:
                     System.out.println("Invalid choice.");
             }
+    
             if (lifeChecker <= 0) {
                 System.out.println("You have died. Game Over.");
                 System.exit(0);
             }
+    
             System.out.println("Your current health is: " + lifeChecker + " HP.");
         }
+        
+        // Call to handle additional room actions, if needed
         handleRoomActions(currentRoom);
     }
-
+    
     public void handleRoomActions(Room currentRoom) {
         if (currentRoom.item != null) {
             pickUpItem(currentRoom);
