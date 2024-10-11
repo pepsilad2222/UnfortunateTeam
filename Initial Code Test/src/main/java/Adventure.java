@@ -2,10 +2,17 @@ import java.util.Scanner;
 
 public class Adventure {
     private Scanner scanner;
+    private String knightName; 
 
     public Adventure() {
         scanner = new Scanner(System.in);
     }
+
+    public Adventure(String knightName) {
+        this.knightName = knightName; // Initialize knight's name
+        //this.scanner = new Scanner(System.in); // Initialize scanner
+    }
+
 
     public void startAdventure() {
         System.out.println("Welcome to the Adventure!");
