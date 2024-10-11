@@ -1,4 +1,9 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Set;
+
 
 class Enemy {
     String name;
@@ -76,13 +81,13 @@ class HealingPotion extends Item {
 class Room {
     String description;
     int healthChange;
-    String enemy;
+    Enemy enemy;
     Item item;
     int roomNumber;
     int[] doors; // Array to hold room connections (0 = no connection)
     boolean visited;
 
-    public Room(String description, int healthChange, String enemy, Item item, int roomNumber, int[] doors) {
+    public Room(String description, int healthChange, Enemy enemy, Item item, int roomNumber, int[] doors) {
         this.description = description;
         this.healthChange = healthChange;
         this.enemy = enemy;
@@ -121,6 +126,9 @@ public class PathDungeon {
         List<Room> roomList = new ArrayList<>();
         HealingPotion healingPotion = new HealingPotion("Healing Potion", 5, 20);
 
+        Enemy orc = new Enemy("Orc", 30, 10); // Enemy with 30 health and 10 attack power
+
+
         // Room 1: Entrance to the castle
         roomList.add(new Room("You stumble through the dense forest and find a mysterious castle.", 0, null, null, 1, new int[]{2, 0, 0, 0}));
 
@@ -128,7 +136,9 @@ public class PathDungeon {
         roomList.add(new Room("You are at the entrance of the dungeon. In the corner of the room is a healing potion.", 0, null, healingPotion, 2, new int[]{3, 1, 0, 0}));
 
         // Room 3: Inside the dungeon
-        roomList.add(new Room("Deeper in the dungeon, you see a gleaming sword in the corner.", 0, null, null, 3, new int[]{0, 2, 0, 0}));
+        //roomList.add(new Room("Deeper in the dungeon, you see a gleaming sword in the corner.", 0, enemy:null, null, 3, new int[]{0, 2, 0, 0}));
+        roomList.add(new Room("You are in the dungeon. In the corner of the room is an orc. He hits you, taking 5 HP away!", -5, orc, null, 3, new int[]{3, 1, 0, 0}));
+
 
         return roomList;
     }
@@ -206,11 +216,29 @@ public class PathDungeon {
     private void movePlayer(Room currentRoom, int direction) {
         int nextRoom = 0;
         switch (direction) {
-            case 1 -> nextRoom = currentRoom.doors[0]; // North
+            /*case 1 -> nextRoom = currentRoom.doors[0]; // North
             case 2 -> nextRoom = currentRoom.doors[1]; // South
             case 3 -> nextRoom = currentRoom.doors[2]; // East
             case 4 -> nextRoom = currentRoom.doors[3]; // West
-            default -> System.out.println("Invalid choice.");
+            default -> System.out.println("Invalid choice."); */
+            
+                case 1:
+                    nextRoom = currentRoom.doors[0]; // North
+                    break;
+                case 2:
+                    nextRoom = currentRoom.doors[1]; // South
+                    break;
+                case 3:
+                    nextRoom = currentRoom.doors[2]; // East
+                    break;
+                case 4:
+                    nextRoom = currentRoom.doors[3]; // West
+                    break;
+                default:
+                    System.out.println("Invalid choice.");
+                    break;
+            
+            
         }
 
         if (nextRoom != 0) {
