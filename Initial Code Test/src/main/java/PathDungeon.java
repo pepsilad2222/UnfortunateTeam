@@ -1,5 +1,34 @@
 import java.util.*;
 
+class Enemy {
+    String name;
+    int health;
+    int attackPower;
+
+    public Enemy(String name, int health, int attackPower) {
+        this.name = name;
+        this.health = health;
+        this.attackPower = attackPower;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void takeDamage(int damage) {
+        this.health -= damage;
+    }
+
+    public int getAttackPower() {
+        return attackPower;
+    }
+}
+
+
 class Item {
     String name;
     int weight;
