@@ -3,6 +3,8 @@ import java.util.Scanner;
 public class Adventure {
     private Scanner scanner;
     private String knightName; 
+    DungeonPath dungeonAdventure = new DungeonPath(knightName); 
+
 
     public Adventure() {
         scanner = new Scanner(System.in);
@@ -12,6 +14,11 @@ public class Adventure {
         this.knightName = knightName; // Initialize knight's name
         //this.scanner = new Scanner(System.in); // Initialize scanner
     }
+
+    public int getLifeChecker() {
+        return dungeonAdventure.lifeChecker; // Access lifeChecker from DungeonPath instance
+    }
+
 
 
     public void startAdventure() {
@@ -44,10 +51,11 @@ public class Adventure {
         // Trigger PathDungeon
         System.out.print("Enter your knight's name: ");
         String knightName = scanner.nextLine();
-        DungeonPath dungeonAdventure = new DungeonPath(knightName); 
+        //DungeonPath dungeonAdventure = new DungeonPath(knightName); 
         dungeonAdventure.startAdventure(); // Start the dungeon adventure
     }
 
+   
     private int getUserInput() {
         while (true) {
             try {
