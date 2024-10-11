@@ -5,4 +5,4 @@
 #### How to Get Started ####
 1. Clone the repo: `git clone https://github.com/your-username/UnfortunateTeam.git`
 2. Navigate to the project directory: `cd UnfortunateTeam`
-3. Run tests: `mvn test`
+3. Run game: `java Adventure`
