@@ -1,9 +1,12 @@
-Overall Work Estimate
-Total Work Estimate: 100 Story Points
+# Overall Work Estimate
 
-Key Features and Their Estimated Effort:
-Room Creation Module (20 SP): Implement a dymanic approach for room definitions.
-Room Properties (20 SP): Develop a variety of properties (triggers, offers, etc.).
-Inventory System (20 SP): Create a player inventory for items like healing potions and weapons to carry, and a inventory limit.
-Dynamic Room States (20 SP): Design a system for room states to change based on player actions.
-Testing & Integration (20 SP): Ensure all features work seamlessly together
+## Total Work Estimate: 60 Story Points
+
+### Key Features and Their Estimated Effort:
+- **Inventory System (10 SP)**: Implement a system for managing player inventory, including items like healing potions and weapons, with an inventory limit.
+- **Room System (10 SP)**: Create a structure for room definitions and navigation, allowing linear progression between rooms.
+- **Player System (10 SP)**: Develop the core player mechanics, including attributes and interactions with the game world.
+- **Healing System (10 SP)**: Design a system that allows players to heal using items like potions.
+- **Enemy System (10 SP)**: Implement enemies with unique behaviors and stats, including combat interactions with the player.
+- **Story System (10 SP)**: Build the storyline framework, enabling dynamic progression based on player decisions.
+
