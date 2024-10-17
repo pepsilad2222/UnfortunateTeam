@@ -1,8 +1,10 @@
 Next Week’s Sprint Plan
 Tasks Breakdown:
 
-Update Room System (4 hours)
--Redesign room progression.
+Impiment more of the story(4 hours)
+-More rooms
+-More fights
+-More puzzels
 
 
 Implement Room Properties (4 hours)
