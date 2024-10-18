@@ -27,10 +27,10 @@ Before running the game, make sure you have the following installed:
     ```
 
 3.**Running Tests** using Maven:
-The game includes a suite of tests to ensure functionality. To run these tests, execute:
-```bash
-mvn test
-```
+    The game includes a suite of tests to ensure functionality. To run these tests, execute:
+   ```bash
+   mvn test
+   ```
 
 3. **Run the game**:
     After the build completes, you can start the game by running this command in the `command line`:
@@ -43,9 +43,5 @@ mvn test
 - **Inventory Management**: Collect weapons, potions, and other items while managing a weight-limited inventory.
 - **Making Decisions**: As you play, you will encounter various choices that will affect the outcome of the game.
   
-  Example commands:
-  - Move by typing `go north`, `go south`, etc.
-  - Interact with objects using commands like `take sword` or `open door`.
-  - Check inventory by typing `inventory`.
 
 
