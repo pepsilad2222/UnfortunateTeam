@@ -236,3 +236,34 @@ public void testRoomMasterReset() {
     dungeonPath.resetGame(); // Reset the game
     assertFalse(testRoom.masterDefeated); // Verify that masterDefeated is reset to false
 }
+
+// Test 27: Verify Inventory Weight After Adding Weapon
+@Test
+public void testInventoryWeightAfterAddingWeapon() {
+    dungeonPath.addToInventory(testWeapon); // Add weapon with weight 10
+    assertEquals(10, dungeonPath.getInventoryWeight()); // Verify weight
+}
+
+// Test 28: Verify Player Health Resets on Restart
+@Test
+public void testPlayerHealthReset() {
+    dungeonPath.lifeChecker = 50; // Health reduced
+    dungeonPath.resetGame(); // Reset game state
+    assertEquals(100, dungeonPath.lifeChecker); // Verify health reset
+}
+
+// Test 29: Verify Player Cannot Add Items Exceeding Weight Limit
+@Test
+public void testCannotAddItemExceedingWeightLimit() {
+    Inventory inventory = new Inventory(10); // Limit set to 10
+    Weapon axe = new Weapon("Axe", 12, 20); // Name: Axe, Weight: 12, Damage: 20
+    assertFalse(inventory.addToInventory(axe)); // This should fail because the weight exceeds the limit
+}
+
+// Test 30: Verify Room Description is Correct
+@Test
+public void testRoomDescription() {
+    assertEquals("A dark, cold room", testRoom.getDescription()); // Verify description
+}
+
+}
