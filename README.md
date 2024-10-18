@@ -26,10 +26,16 @@ Before running the game, make sure you have the following installed:
     mvn clean install
     ```
 
+3.**Running Tests** using Maven:
+The game includes a suite of tests to ensure functionality. To run these tests, execute:
+```bash
+mvn test
+```
+
 3. **Run the game**:
-    After the build completes, you can start the game by running the JAR file created in the `target` folder:
+    After the build completes, you can start the game by running this command in the `command line`:
     ```bash
-    java -jar target/Adventure.jar
+    mvn compile exec:java
     ```
 
 ### How to Play
@@ -42,7 +48,4 @@ Before running the game, make sure you have the following installed:
   - Interact with objects using commands like `take sword` or `open door`.
   - Check inventory by typing `inventory`.
 
-### Running Tests
-The game includes a suite of tests to ensure functionality. To run these tests, execute:
-```bash
-mvn test
+
