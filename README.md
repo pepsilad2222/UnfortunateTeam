@@ -26,13 +26,13 @@ Before running the game, make sure you have the following installed:
     mvn clean install
     ```
 
-3.**Running Tests** using Maven:
+3. **Running Tests** using Maven:
     The game includes a suite of tests to ensure functionality. To run these tests, execute:
    ```bash
    mvn test
    ```
 
-3. **Run the game**:
+4. **Run the game**:
     After the build completes, you can start the game by running this command in the `command line`:
     ```bash
     mvn compile exec:java
