@@ -1,5 +1,11 @@
-5. Show What It's Going to Take
+Show What It's Going to Take
 Time:
+Our time is more detailed in "Size it up" but the general plan is:
+First 4-6 Weeks (Pre-production)
+Middle 6-8 Weeks (Development)
+Final 2-3 Weeks (Polishing and Testing)
+
+
 Cost:
 
 Development Tools: Free tools should be sufficient, meaning no monetary cost.
