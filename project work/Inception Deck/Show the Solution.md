@@ -1,11 +1,33 @@
-**Show the Solution 
-**Player:
-Contains the knight's stats (health, inventory, abilities, etc) and methods to interact with the environment (move, attack, use items).
-World:
-Includes game areas such as Dungeons and Castles.
-Enemy:
-Enemies in different areas with attacks and health tracking.
-Combat System:
-Determines how the knight and enemies interact during battles.
-Inventory/Item Management:
-Handles in-game items (weapons, potions, keys) and their use by the player.
+## Show the Solution
+
+### Player
+- Contains the knight's stats such as:
+  - Health
+  - Inventory
+  - Abilities
+- Provides methods for the knight to interact with the environment, including:
+  - Moving between areas
+  - Attacking enemies
+  - Using items from the inventory
+
+### World
+- Consists of different game areas that the knight can explore, such as:
+  - Dungeons
+  - Castles
+
+### Enemy
+- Includes various types of enemies found in different areas.
+- Tracks enemy attributes such as:
+  - Health
+  - Attacks
+
+### Combat System
+- Governs interactions during battles between the knight and enemies.
+- Determines the outcome of attacks and defenses.
+
+### Inventory/Item Management
+- Manages in-game items such as:
+  - Weapons
+  - Potions
+  - Keys
+- Handles item usage and its effects on gameplay, like healing or unlocking new areas.
