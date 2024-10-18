@@ -213,3 +213,26 @@ public void testCanMoveAfterDefeatingMaster() {
     assertTrue(canMove); // Movement should be allowed
 }
 
+// Test 24: Verify Adding Visited Room to History
+@Test
+public void testAddVisitedRoom() {
+    dungeonPath.addVisitedRoom(1); // Mark room 1 as visited
+    assertTrue(dungeonPath.visitedRooms.contains(1)); // Verify it's recorded
+}
+
+// Test 25: Verify Duplicate Room Visits are Handled Correctly
+@Test
+public void testDuplicateRoomVisits() {
+    dungeonPath.addVisitedRoom(1); // Visit room 1
+    dungeonPath.addVisitedRoom(1); // Visit again
+    assertEquals(1, dungeonPath.visitedRooms.size()); // No duplicate entries
+}
+
+// Test 26: Verify Room Master Status Resets on Restart
+@Test
+public void testRoomMasterReset() {
+    Room testRoom = dungeonPath.rooms.get(0); // Get the specific room
+    testRoom.masterDefeated = true; // Set master as defeated initially
+    dungeonPath.resetGame(); // Reset the game
+    assertFalse(testRoom.masterDefeated); // Verify that masterDefeated is reset to false
+}
