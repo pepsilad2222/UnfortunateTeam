@@ -17,22 +17,31 @@ Before running the game, make sure you have the following installed:
 ### Installation
 1. **Clone the repository** to your local machine:
     ```bash
-    git clone <https://github.com/pepsilad2222/UnfortunateTeam.git>
-    cd <UnfortunateTeam>
+    git clone https://github.com/pepsilad2222/UnfortunateTeam.git
+    cd UnfortunateTeam
     ```
 
-2. **Build the project** using Maven:
+2. **Locate the correct Directory**:
+    ```bash
+    cd "Project Folder"
+     ```
+    **then type**
+   ```bash
+    cd "Initial Code Test"
+    ```
+   
+3. **Build the project** using Maven:
     ```bash
     mvn clean install
     ```
 
-3. **Running Tests** using Maven:
+4. **Running Tests** using Maven:
     The game includes a suite of tests to ensure functionality. To run these tests, execute:
    ```bash
    mvn test
    ```
 
-4. **Run the game**:
+5. **Run the game**:
     After the build completes, you can start the game by running this command in the `command line`:
     ```bash
     mvn compile exec:java
