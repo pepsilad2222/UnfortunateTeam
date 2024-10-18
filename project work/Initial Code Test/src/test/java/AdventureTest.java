@@ -174,4 +174,42 @@ public class AdventureTest {
         assertTrue(testRoom.visited);
     }
 
-  
+    // Test 21: Verify Room Health Impact on Player Life
+    @Test
+    public void testRoomHealthImpact() {
+        // Setup
+        Player player = new Player();
+        Room room = new Room(
+            "A dark room that drains your energy.", // Description
+            -10, // Health change (negative impact)
+            null, // No enemy in this room
+            null, // No item in this room
+            1, // Room number
+            new int[]{}, // No connections for this test
+            null // No master
+        );
+
+        // Act
+        player.enterRoom(room);
+
+        // Assert
+        assertEquals(90, player.getHealth()); // Expecting health to be 90 after entering the room
+    }
+
+
+// Test 22: Verify Player Cannot Move Without Defeating Room Master
+@Test
+public void testCannotMoveWithoutDefeatingMaster() {
+    testRoom.masterDefeated = false; // Master not yet defeated
+    boolean canMove = dungeonPath.canMoveToNextRoom(testRoom);
+    assertTrue(!canMove); // Should not allow movement
+}
+
+// Test 23: Verify Player Can Move After Defeating Room Master
+@Test
+public void testCanMoveAfterDefeatingMaster() {
+    testRoom.masterDefeated = true; // Master defeated
+    boolean canMove = dungeonPath.canMoveToNextRoom(testRoom);
+    assertTrue(canMove); // Movement should be allowed
+}
+
