@@ -25,6 +25,6 @@
 
 
 
-# Goals for the Sprint:
+### Goals for the Sprint:
 - Complete all updates, implimentations and redesigns.
 - Make sure all tests pass.
