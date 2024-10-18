@@ -1,5 +1,5 @@
-Show the Solution 
-Player:
+**Show the Solution 
+**Player:
 Contains the knight's stats (health, inventory, abilities, etc) and methods to interact with the environment (move, attack, use items).
 World:
 Includes game areas such as Dungeons and Castles.
