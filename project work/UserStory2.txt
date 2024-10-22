@@ -1,1 +1,2 @@
-
+User Story 2: Add Functions : 
+I want to defeat enemies so that my choices impact the game and I feel more engaged in the story.
