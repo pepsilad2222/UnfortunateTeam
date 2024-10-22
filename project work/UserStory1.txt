@@ -1,1 +1,2 @@
-Short Descritpions of features the customers woukd like to see one day in their software.
+User Story 1: Expand Gameplay : 
+I want multiple mazes to explore, so that I can enjoy a longer and more varied adventure rather than a single, quick experience.
