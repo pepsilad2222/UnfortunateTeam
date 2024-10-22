@@ -1,6 +1,7 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -266,4 +267,107 @@ public void testRoomDescription() {
     assertEquals("A dark, cold room", testRoom.getDescription()); // Verify description
 }
 
+// Test 31: Verify Player Health Does Not Go Negative
+@Test
+public void testPlayerHealthNonNegative() {
+    Player player = new Player();
+    Room dangerousRoom = new Room("Deadly Trap", -200, null, null, 1, new int[]{}, null); // High negative health impact
+    player.enterRoom(dangerousRoom);
+    assertEquals(0, player.getHealth()); // Health should not be negative
 }
+
+// Test 32: Verify Inventory Can Hold Multiple Potions
+@Test
+public void testAddMultiplePotionsToInventory() {
+    DungeonPath dungeonPath = new DungeonPath("Knight");
+
+    HealingPotion potion1 = new HealingPotion("Small Potion", 2, 10);
+    HealingPotion potion2 = new HealingPotion("Large Potion", 3, 20);
+
+    dungeonPath.addToInventory(potion1);
+    dungeonPath.addToInventory(potion2);
+
+    assertEquals(2, dungeonPath.getInventory().getHealingPotions().size());
+}
+
+// Test 33: Verify Player Cannot Enter Room if Health is Zero
+@Test
+public void testPlayerCannotEnterRoomWithZeroHealth() {
+    Player player = new Player();
+    player.enterRoom(new Room("Safe Room", -100, null, null, 1, new int[]{}, null)); // Reduce health to 0
+    assertEquals(0, player.getHealth()); // Verify player cannot enter rooms with 0 health
+}
+
+// Test 34: Verify Player Inventory After Removing Multiple Items
+@Test
+public void testRemoveMultipleItemsFromInventory() {
+    dungeonPath.addToInventory(testWeapon); // Add weapon
+    dungeonPath.addToInventory(testPotion); // Add potion
+    dungeonPath.removeItem(testWeapon); // Remove weapon
+    dungeonPath.removeItem(testPotion); // Remove potion
+    assertTrue(dungeonPath.getInventory().isEmpty()); // Inventory should be empty after removal
+}
+
+// Test 35: Verify Resetting Game Resets Inventory
+@Test
+public void testResetGameResetsInventory() {
+    dungeonPath.addToInventory(testWeapon); // Add weapon to inventory
+    dungeonPath.resetGame(); // Reset game
+    assertTrue(dungeonPath.getInventory().isEmpty()); // Inventory should be empty after reset
+}
+
+
+// Test 36: Verify Health Potion Increases Player Health
+@Test
+public void testPotionIncreasesPlayerHealth() {
+    Player player = new Player();
+    HealingPotion potion = new HealingPotion("Small Potion", 5, 20);
+    player.enterRoom(new Room("Test Room", -30, null, null, 1, new int[]{}, null)); // Reduce health
+    assertEquals(70, player.getHealth()); // Health should be 70 after damage
+    player.useHealingPotion(potion); // Use healing potion
+    assertEquals(90, player.getHealth()); // Health should increase to 90
+}
+
+// Test 37: Verify Room Description Change After Master Defeat
+@Test
+public void testRoomDescriptionAfterMasterDefeat() {
+    Room masterRoom = new Room("Master's Lair", 0, null, null, 1, new int[]{}, "Dungeon Master");
+    masterRoom.masterDefeated = true; // Defeat master
+    String newDescription = masterRoom.getDescription() + " The master has been defeated.";
+    assertEquals("Master's Lair The master has been defeated.", newDescription); // Check updated description
+}
+
+// Test 38: Verify Enemy Attack Reduces Player Health
+@Test
+public void testEnemyAttackReducesPlayerHealth() {
+    Player player = new Player();
+    Enemy enemy = new Enemy("Orc", 30, 15); // Enemy deals 15 damage
+    player.receiveDamage(enemy.attackPower); // Enemy attacks player
+    assertEquals(85, player.getHealth()); // Health should decrease by 15
+}
+
+// Test 39: Verify Cannot Exceed Maximum Healing with Potion
+@Test
+public void testPotionDoesNotExceedMaxHealth() {
+    Player player = new Player();
+    HealingPotion potion = new HealingPotion("Large Potion", 5, 50); // Healing more than required
+    player.useHealingPotion(potion); // Use potion
+    assertEquals(100, player.getHealth()); // Health should not exceed 100
+}
+
+// Test 40: Verify DungeonPath Room Connections
+@Test
+public void testRoomConnections() {
+    Room room1 = new Room("Room 1", 0, null, null, 1, new int[]{2}, null); // Connects to Room 2
+    Room room2 = new Room("Room 2", 0, null, null, 2, new int[]{1}, null); // Connects back to Room 1
+    dungeonPath.rooms.add(room1);
+    dungeonPath.rooms.add(room2);
+    assertEquals(2, room1.connections[0]); // Room 1 connects to Room 2
+    assertEquals(1, room2.connections[0]); // Room 2 connects to Room 1
+}
+
+
+
+}
+
+
