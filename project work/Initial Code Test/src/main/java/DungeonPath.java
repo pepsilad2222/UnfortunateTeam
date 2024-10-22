@@ -12,6 +12,9 @@ public class DungeonPath {
     public int currentInventoryWeight = 0;
     public int lifeChecker = 100;
     public final Scanner scanner;
+    public List<Item> items; // or Item[] items = new Item[MAX_ITEMS]; if you are using an array
+    public int currentWeight;
+    public int weightLimit; // Assuming you also have a weight limit
 
     public DungeonPath(String knightName) {
         this.knightName = knightName;
@@ -21,6 +24,8 @@ public class DungeonPath {
         this.healingPotions = new ArrayList<>();
         this.scanner = new Scanner(System.in);
         this.inventory = new Inventory(inventoryWeightLimit);
+        this.items = new ArrayList<>(); // Initialize the items list
+        this.currentWeight = 0; // Initialize current weight
     }
 
     private List<Room> createRooms() {
@@ -31,7 +36,6 @@ public class DungeonPath {
         return roomList;
     }
     
-
     public void startAdventure() {
         System.out.println("Welcome, " + knightName + "!");
         System.out.println("Your adventure begins in the forest...");
@@ -123,18 +127,24 @@ public class DungeonPath {
     }
 
     public void resetGame() {
-        visitedRooms.clear();
-        lifeChecker = 100;
-        currentInventoryWeight = 0;
-        weapons.clear();
-        healingPotions.clear();
+        this.lifeChecker = 100; // Reset player health
+        inventory.resetInventory(); // Reset inventory
+        this.weapons.clear(); // Clear weapon inventory
+        this.healingPotions.clear(); // Clear healing potions
         for (Room room : rooms) {
-            room.resetRoom(); // Ensure this resets both visited and master status
+            room.masterDefeated = false; // Reset all room master statuses
+            room.visited = false; // Reset visited status if needed
         }
+        // Other reset logic as necessary
     }
+    
     
     public boolean addToInventory(Item item) {
         return inventory.addToInventory(item);  // Delegate to Inventory
+    }
+
+    public void removeItem(Item item) {
+        inventory.removeItem(item); // Call the removeItem method from Inventory
     }
 
     public Inventory getInventory() {
@@ -148,6 +158,4 @@ public class DungeonPath {
     public boolean canMoveToNextRoom(Room room) {
         return room.masterDefeated; // Allow movement only if the master is defeated
     }
-    
-
 }
