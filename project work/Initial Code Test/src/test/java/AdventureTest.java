@@ -1,5 +1,6 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
@@ -365,9 +366,204 @@ public void testRoomConnections() {
     assertEquals(2, room1.connections[0]); // Room 1 connects to Room 2
     assertEquals(1, room2.connections[0]); // Room 2 connects to Room 1
 }
-
-
-
+// Test 41: Verify Room 1 Description
+@Test
+public void testRoom1Description() {
+    Room room1 = new Room("Floor 1, Room 1: The Entrance Hall - A grand chamber with ancient pillars.", 
+                          0, new Enemy("Guard Goblin", 20, 5), 
+                          new HealingPotion("Small Health Potion", 1, 20), 1, new int[]{2}, null);
+    dungeonPath.rooms.add(room1);
+    assertEquals("Floor 1, Room 1: The Entrance Hall - A grand chamber with ancient pillars.", room1.getDescription());
 }
 
+// Test 42: Verify Room 5 Description
+@Test
+public void testRoom5Description() {
+    Room room5 = new Room("Floor 1, Room 5: The Mess Hall - Long tables covered in cobwebs.", 
+                          0, new Enemy("Hungry Troll", 40, 10), 
+                          null, 5, new int[]{6, 4}, null);
+    dungeonPath.rooms.add(room5);
+    assertEquals("Floor 1, Room 5: The Mess Hall - Long tables covered in cobwebs.", room5.getDescription());
+}
 
+// Test 43: Verify Room Connections on Floor 1, Room 3
+@Test
+public void testRoom3Connections() {
+    Room room3 = new Room("Floor 1, Room 3: The Training Ground - Practice dummies stand silently.", 
+                          0, new Enemy("Training Golem", 30, 8), 
+                          null, 3, new int[]{4, 2}, null);
+    dungeonPath.rooms.add(room3);
+    assertEquals(4, room3.connections[0]); // Room 3 connects to Room 4
+    assertEquals(2, room3.connections[1]); // Room 3 connects back to Room 2
+}
+
+// Test 44: Verify Enemy Attributes in Room 1
+@Test
+public void testRoom1EnemyAttributes() {
+    Room room1 = new Room("Floor 1, Room 1: The Entrance Hall", 
+                          0, new Enemy("Guard Goblin", 20, 5), 
+                          null, 1, new int[]{2}, null);
+    dungeonPath.rooms.add(room1);
+    Enemy enemy = room1.getEnemy();
+    assertEquals("Guard Goblin", enemy.getName());
+    assertEquals(20, enemy.getHealth());
+    assertEquals(5, enemy.getAttackPower());
+}
+
+// Test 45: Verify Boss Room Enemy Attributes in Room 10
+@Test
+public void testRoom10BossAttributes() {
+    Room room10 = new Room("Floor 1, Room 10: The Boss Chamber", 
+                           0, new Enemy("Floor Guardian", 100, 20), 
+                           null, 10, new int[]{9}, "Floor Master");
+    dungeonPath.rooms.add(room10);
+    Enemy boss = room10.getEnemy();
+    assertEquals("Floor Guardian", boss.getName());
+    assertEquals(100, boss.getHealth());
+    assertEquals(20, boss.getAttackPower());
+}
+
+// Test 46: Verify Weapon Attributes in Room 2
+@Test
+public void testRoom2WeaponAttributes() {
+    Room room2 = new Room("Floor 1, Room 2: The Armory", 
+                          0, new Enemy("Skeleton Warrior", 25, 7), 
+                          new Weapon("Rusty Dagger", 2, 8), 2, new int[]{3, 1}, null);
+    dungeonPath.rooms.add(room2);
+    Weapon weapon = (Weapon) room2.getItem();
+    assertEquals("Rusty Dagger", weapon.getName());
+    assertEquals(2, weapon.getWeight());
+    assertEquals(8, weapon.getAttackPower());
+}
+
+// Test 47: Verify Healing Potion Attributes in Room 4
+@Test
+public void testRoom4PotionAttributes() {
+    Room room4 = new Room("Floor 1, Room 4: The Barracks", 
+                          0, new Enemy("Undead Soldier", 35, 9), 
+                          new HealingPotion("Medium Health Potion", 2, 40), 4, new int[]{5, 3}, null);
+    dungeonPath.rooms.add(room4);
+    HealingPotion potion = (HealingPotion) room4.getItem();
+    assertEquals("Medium Health Potion", potion.getName());
+    assertEquals(2, potion.getWeight());
+    assertEquals(40, potion.getHealAmount());
+}
+
+// Test 48: Verify Room without Items in Room 3
+@Test
+public void testRoom3WithoutItems() {
+    Room room3 = new Room("Floor 1, Room 3: The Training Ground", 
+                          0, new Enemy("Training Golem", 30, 8), 
+                          null, 3, new int[]{4, 2}, null);
+    dungeonPath.rooms.add(room3);
+    assertNull(room3.getItem());
+}
+
+// Test 49: Verify Room Master Presence in Room 10
+@Test
+public void testRoom10RoomMasterPresence() {
+    Room room10 = new Room("Floor 1, Room 10: The Boss Chamber", 
+                           0, new Enemy("Floor Guardian", 100, 20), 
+                           null, 10, new int[]{9}, "Floor Master");
+    dungeonPath.rooms.add(room10);
+    assertEquals("Floor Master", room10.getRoomMaster());
+}
+
+// Test 50: Verify Adjacent Room Connections
+@Test
+public void testAdjacentRoomConnections() {
+    Room room5 = new Room("Floor 1, Room 5: The Mess Hall", 
+                          0, new Enemy("Hungry Troll", 40, 10), 
+                          null, 5, new int[]{6, 4}, null);
+    Room room6 = new Room("Floor 1, Room 6: The Kitchen", 
+                          0, new Enemy("Chef Goblin", 45, 11), 
+                          new Weapon("Kitchen Knife", 1, 12), 6, new int[]{7, 5}, null);
+    dungeonPath.rooms.add(room5);
+    dungeonPath.rooms.add(room6);
+    assertEquals(6, room5.connections[0]); // Room 5 connects to Room 6
+    assertEquals(5, room6.connections[1]); // Room 6 connects back to Room 5
+}
+
+// Test 51: Verify Room 1 Connection Forward Only
+@Test
+public void testRoom1SingleConnection() {
+    Room room1 = new Room("Floor 1, Room 1: The Entrance Hall", 
+                          0, new Enemy("Guard Goblin", 20, 5), 
+                          null, 1, new int[]{2}, null);
+    dungeonPath.rooms.add(room1);
+    assertEquals(2, room1.connections[0]); // Room 1 connects to Room 2
+}
+
+// Test 52: Verify Room 7 Healing Potion Weight
+@Test
+public void testRoom7PotionWeight() {
+    Room room7 = new Room("Floor 1, Room 7: The Pantry", 
+                          0, new Enemy("Giant Rat", 50, 12), 
+                          new HealingPotion("Large Health Potion", 3, 60), 7, new int[]{8, 6}, null);
+    dungeonPath.rooms.add(room7);
+    HealingPotion potion = (HealingPotion) room7.getItem();
+    assertEquals(3, potion.getWeight());
+}
+
+// Test 53: Verify Room with No Enemy
+@Test
+public void testRoomWithNoEnemy() {
+    Room room8 = new Room("Floor 1, Room 8: The Wine Cellar", 
+                          0, null, 
+                          null, 8, new int[]{9, 7}, null);
+    dungeonPath.rooms.add(room8);
+    assertNull(room8.getEnemy());
+}
+
+// Test 54: Verify Room 3 Enemy Attack Power
+@Test
+public void testRoom3EnemyAttackPower() {
+    Room room3 = new Room("Floor 1, Room 3: The Training Ground", 
+                          0, new Enemy("Training Golem", 30, 8), 
+                          null, 3, new int[]{4, 2}, null);
+    dungeonPath.rooms.add(room3);
+    assertEquals(8, room3.getEnemy().getAttackPower());
+}
+
+// Test 55: Verify Room Master Absence in Non-Boss Room
+@Test
+public void testNoRoomMasterInNonBossRoom() {
+    Room room5 = new Room("Floor 1, Room 5: The Mess Hall", 
+                          0, new Enemy("Hungry Troll", 40, 10), 
+                          null, 5, new int[]{6, 4}, null);
+    dungeonPath.rooms.add(room5);
+    assertNull(room5.getRoomMaster());
+}
+
+// Test 56: Verify Room Health Impact for Trap Room
+@Test
+public void testTrapRoomHealthImpact() {
+    Room trapRoom = new Room("Trap Room", -20, null, null, 1, new int[]{}, null);
+    dungeonPath.rooms.add(trapRoom);
+    assertEquals(-20, trapRoom.getHealthChange());
+}
+
+// Test 57: Verify Room 10 Enemy Health After Defeat
+@Test
+public void testBossRoomEnemyHealthAfterDefeat() {
+    Room room10 = new Room("Floor 1, Room 10: The Boss Chamber", 
+                           0, new Enemy("Floor Guardian", 100, 20), 
+                           null, 10, new int[]{9}, "Floor Master");
+    dungeonPath.rooms.add(room10);
+
+    Enemy boss = room10.enemy; // Get the enemy from the room
+
+    // Assert that the boss is alive before taking damage
+    assertTrue("Boss should be alive initially", boss.isAlive());
+
+    // Simulate defeating the boss
+    boss.takeDamage(100); // Inflict damage equal to the boss's health
+
+    // Assert that the boss is not alive after taking damage
+    assertFalse("Boss should be defeated after taking 100 damage", boss.isAlive());
+
+    // Assert that the boss's health is now 0
+    assertEquals("Boss health should be 0 after defeat", 0, boss.health);
+}
+
+}
