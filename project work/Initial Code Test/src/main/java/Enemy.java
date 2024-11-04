@@ -24,5 +24,15 @@ public class Enemy {
         return name;
     }
 
+    // Getter method for health
+    public int getHealth() {
+        return health;
+    }
+
+    // Getter method for attack power
+    public int getAttackPower() {
+        return attackPower;
+    }
+
     // Other methods...
 }
