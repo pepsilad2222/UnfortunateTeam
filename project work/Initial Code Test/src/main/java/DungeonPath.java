@@ -1,59 +1,110 @@
 import java.util.*;
 
 public class DungeonPath {
+    public final List<Weapon> weapons = new ArrayList<>();
+    public final List<HealingPotion> healingPotions = new ArrayList<>();
     public Room currentRoom;
     public final String knightName;
     public final Set<Integer> visitedRooms;
     public final Inventory inventory;
     public final List<Room> rooms;
-    public final List<Weapon> weapons;
-    public final List<HealingPotion> healingPotions;
-    public int inventoryWeightLimit = 50;
-    public int currentInventoryWeight = 0;
     public int lifeChecker = 100;
     public final Scanner scanner;
-    public List<Item> items; // or Item[] items = new Item[MAX_ITEMS]; if you are using an array
-    public int currentWeight;
-    public int weightLimit; // Assuming you also have a weight limit
+    public static final int ROOMS_PER_FLOOR = 10;
+    public int currentFloor = 1;
+    public int inventoryWeightLimit = 50;
+    public int currentInventoryWeight = 0;
 
     public DungeonPath(String knightName) {
         this.knightName = knightName;
         this.visitedRooms = new HashSet<>();
+        this.inventory = new Inventory(50); // Set default weight limit to 50
         this.rooms = createRooms();
-        this.weapons = new ArrayList<>();
-        this.healingPotions = new ArrayList<>();
         this.scanner = new Scanner(System.in);
-        this.inventory = new Inventory(inventoryWeightLimit);
-        this.items = new ArrayList<>(); // Initialize the items list
-        this.currentWeight = 0; // Initialize current weight
     }
 
     private List<Room> createRooms() {
         List<Room> roomList = new ArrayList<>();
-        roomList.add(new Room("You stumble through the dense forest and find a mysterious castle.", 0, null, null, 1, new int[]{2, 0, 0, 0}, null));
-        roomList.add(new Room("You are at the entrance of the dungeon.", 0, new Enemy("Goblin", 20, 5), null, 2, new int[]{3, 1, 0, 0}, null));
-        roomList.add(new Room("Deeper in the dungeon, you feel danger lurking.", 0, new Enemy("Orc", 40, 10), new Weapon("Sword", 5, 10), 3, new int[]{0, 2, 0, 0}, "Master Goblin"));
+        
+        // First floor rooms (10 rooms in linear progression)
+        roomList.add(new Room("Floor 1, Room 1: The Entrance Hall - A grand chamber with ancient pillars.", 
+            0, new Enemy("Guard Goblin", 20, 5), 
+            new HealingPotion("Small Health Potion", 1, 20), // Added a healing potion to first room
+            1, new int[]{2, 0, 0, 0}, null));
+            
+        roomList.add(new Room("Floor 1, Room 2: The Armory - Weapon racks line the walls.", 
+            0, new Enemy("Skeleton Warrior", 25, 7), 
+            new Weapon("Rusty Dagger", 2, 8), 
+            2, new int[]{3, 1, 0, 0}, null));
+            
+        roomList.add(new Room("Floor 1, Room 3: The Training Ground - Practice dummies stand silently.", 
+            0, new Enemy("Training Golem", 30, 8), 
+            null, 3, new int[]{4, 2, 0, 0}, null));
+            
+        roomList.add(new Room("Floor 1, Room 4: The Barracks - Empty beds and scattered equipment.", 
+            0, new Enemy("Undead Soldier", 35, 9), 
+            new HealingPotion("Medium Health Potion", 2, 40), 
+            4, new int[]{5, 3, 0, 0}, null));
+            
+        roomList.add(new Room("Floor 1, Room 5: The Mess Hall - Long tables covered in cobwebs.", 
+            0, new Enemy("Hungry Troll", 40, 10), 
+            null, 5, new int[]{6, 4, 0, 0}, null));
+            
+        roomList.add(new Room("Floor 1, Room 6: The Kitchen - Rusty utensils and cold hearths.", 
+            0, new Enemy("Chef Goblin", 45, 11), 
+            new Weapon("Kitchen Knife", 1, 12), 
+            6, new int[]{7, 5, 0, 0}, null));
+            
+        roomList.add(new Room("Floor 1, Room 7: The Pantry - Rotting barrels and crates.", 
+            0, new Enemy("Giant Rat", 50, 12), 
+            new HealingPotion("Large Health Potion", 3, 60), 
+            7, new int[]{8, 6, 0, 0}, null));
+            
+        roomList.add(new Room("Floor 1, Room 8: The Wine Cellar - Broken bottles everywhere.", 
+            0, new Enemy("Drunken Orc", 55, 13), 
+            null, 8, new int[]{9, 7, 0, 0}, null));
+            
+        roomList.add(new Room("Floor 1, Room 9: The Treasury - Empty chests and scattered coins.", 
+            0, new Enemy("Treasure Guardian", 60, 14), 
+            new Weapon("Golden Sword", 5, 25), 
+            9, new int[]{10, 8, 0, 0}, null));
+            
+        roomList.add(new Room("Floor 1, Room 10: The Boss Chamber - A throne sits at the far end.", 
+            0, new Enemy("Floor Guardian", 100, 20), 
+            null, 10, new int[]{0, 9, 0, 0}, "Floor Master"));
+        
         return roomList;
     }
     
     public void startAdventure() {
-        System.out.println("Welcome, " + knightName + "!");
-        System.out.println("Your adventure begins in the forest...");
+        System.out.println("Welcome, brave " + knightName + "!");
+        System.out.println("Your adventure begins in the forest maze...");
         handleForestNavigation();
     }
 
     private void handleForestNavigation() {
-        System.out.println("You are in a dense forest. Navigate to find your way out.");
+        System.out.println("You are in a dense forest maze. Navigate to find your way out.");
         String correctPath = "north north east east west west north";
         String[] correctSteps = correctPath.split(" ");
         List<String> playerPath = new ArrayList<>();
         int progress = 0;
 
         while (true) {
-            System.out.println("Choose a direction: 1: North, 2: South, 3: East, 4: West");
-            int direction = getUserInput();
+            System.out.println("\nChoose a direction:");
+            System.out.println("1: North");
+            System.out.println("2: South");
+            System.out.println("3: East");
+            System.out.println("4: West");
+            System.out.println("5: Check inventory");
+            
+            int choice = getUserInput();
+            
+            if (choice == 5) {
+                inventory.showInventory();
+                continue;
+            }
 
-            String directionStr = switch (direction) {
+            String directionStr = switch (choice) {
                 case 1 -> "north";
                 case 2 -> "south";
                 case 3 -> "east";
@@ -62,21 +113,39 @@ public class DungeonPath {
             };
 
             if (!directionStr.isEmpty()) {
-                if (playerPath.contains(directionStr)) {
-                    System.out.println("You remember that you've already visited here before.");
-                }
-
                 if (directionStr.equals(correctSteps[progress])) {
                     System.out.println("You feel like you're heading in the right direction.");
                     playerPath.add(directionStr);
                     progress++;
                 } else {
-                    System.out.println("Something feels wrong...");
+                    System.out.println("Something feels wrong... Maybe try another direction.");
                 }
 
                 if (progress == correctSteps.length) {
-                    System.out.println("You successfully navigated the forest!");
-                    enterRoom(1);  // Start at Room 1
+                    System.out.println("\nCongratulations! You've successfully navigated the forest maze!");
+                    System.out.println("You find a magnificent sword lying against an ancient tree!");
+                    
+                    // Create the Forest Sword with appropriate weight and attack power
+                    Weapon forestSword = new Weapon("Forest Sword", 4, 15);
+                    if (inventory.addToInventory(forestSword)) {
+                        System.out.println("The Forest Sword has been added to your inventory!");
+                        System.out.println("Stats: Weight: 4, Attack Power: 15");
+                    }
+                    
+                    // Ask if player wants to enter the dungeon
+                    System.out.println("\nA massive dungeon looms before you.");
+                    System.out.println("Would you like to enter?");
+                    System.out.println("1: Yes - Enter the dungeon");
+                    System.out.println("2: No - End the adventure");
+                    
+                    choice = getUserInput();
+                    if (choice == 1) {
+                        System.out.println("\nYou step into the dungeon...");
+                        enterRoom(1);  // Start at first room
+                    } else {
+                        System.out.println("You decide to return another day. Farewell, brave adventurer!");
+                        System.exit(0);
+                    }
                     break;
                 }
             }
@@ -89,34 +158,81 @@ public class DungeonPath {
             System.out.println("You have already visited this room.");
         } else {
             visitedRooms.add(currentRoom.getRoomNumber());
-            currentRoom.visited = true; // Mark the room as visited
-            System.out.println("\nRoom " + currentRoom.getRoomNumber() + ":");
-            System.out.println(currentRoom.getDescription());
+            currentRoom.visited = true;
+            
+            System.out.println("\n" + currentRoom.getDescription());
     
-            // If there's an item, add it to the inventory
+            // Handle enemy encounter
+            if (currentRoom.enemy != null) {
+                System.out.println("\nA " + currentRoom.enemy.name + " appears!");
+                System.out.println("Enemy Stats - Health: " + currentRoom.enemy.health + 
+                                 ", Attack Power: " + currentRoom.enemy.attackPower);
+            }
+    
+            // Handle items in room
             if (currentRoom.item != null) {
-                if (inventory.addToInventory(currentRoom.item)) {
-                    System.out.println("You have acquired: " + currentRoom.item.getName());
-                } else {
-                    System.out.println("Could not acquire the item. Inventory is full.");
+                System.out.println("\nYou see a " + currentRoom.item.getName() + " in the room.");
+                System.out.println("Would you like to pick it up? (1: Yes, 2: No)");
+                int choice = getUserInput();
+                if (choice == 1) {
+                    if (inventory.addToInventory(currentRoom.item)) {
+                        System.out.println("Added " + currentRoom.item.getName() + " to your inventory.");
+                        currentRoom.item = null; // Remove item from room after picking up
+                    }
                 }
             }
     
-            System.out.println("Choose your next direction:");
+            // Show available actions
+            while (true) {
+                System.out.println("\nWhat would you like to do?");
+                System.out.println("1: Move to next room");
+                System.out.println("2: View inventory");
+                System.out.println("3: Check status");
+                System.out.println("4: Use healing potion");
+                
+                int choice = getUserInput();
+                switch (choice) {
+                    case 1:
+                        if (roomNumber < ROOMS_PER_FLOOR) {
+                            enterRoom(roomNumber + 1);
+                            return;
+                        } else {
+                            System.out.println("You've reached the end of this floor!");
+                        }
+                        break;
+                    case 2:
+                        inventory.showInventory();
+                        break;
+                    case 3:
+                        System.out.println("\nStatus:");
+                        System.out.println("Health: " + lifeChecker + "/100");
+                        System.out.println("Current Floor: " + currentFloor);
+                        System.out.println("Current Room: " + roomNumber);
+                        break;
+                    case 4:
+                        List<HealingPotion> potions = inventory.getHealingPotions();
+                        if (potions.isEmpty()) {
+                            System.out.println("You don't have any healing potions!");
+                        } else {
+                            // Implement potion usage logic here
+                        }
+                        break;
+                }
+            }
         }
     }
 
     private int getUserInput() {
         while (true) {
             System.out.print("Enter your choice: ");
-            String input = scanner.nextLine();
             try {
-                return Integer.parseInt(input);
+                return Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a number.");
             }
         }
     }
+
 
     public void addVisitedRoom(int roomNumber) {
         visitedRooms.add(roomNumber);
