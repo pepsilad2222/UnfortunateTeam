@@ -25,6 +25,24 @@ public class Room {
         this.roomMaster = master;
         this.connections = connections; // Store connections
     }
+        // Method to get the enemy in the room
+        public Enemy getEnemy() {
+            return enemy;
+        }
+
+    // Method to get the item in the room
+    public Item getItem() {
+        return item;
+    }
+
+    public String getRoomMaster() {
+        return roomMaster;
+    }
+
+       // Getter method for health change
+       public int getHealthChange() {
+        return healthChange; // Return the health change value
+    }
 
     public void visitRoom() {
         visitCount++; // Increment visit count each time the room is visited
@@ -102,5 +120,4 @@ public class Room {
 
         return roomList;
     }
-    
 }
