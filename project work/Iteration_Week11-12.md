@@ -9,6 +9,9 @@
 ### **Iteration Current:**  
 #### Plans for the next week of this iteration: 
 #### Tasks Breakdown:
+
+Boss Battle Development (7 hours): Create the boss logic and functions.
+
 Develop Other Path (4 hours): Finish left path that introduces players to the game, going a longer way around before getting to the dungeon
 
 Testing (2 hours): Test new additions for bugs and integration issues.
