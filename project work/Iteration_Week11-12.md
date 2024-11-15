@@ -7,20 +7,22 @@
 3. Finalize the number of rooms, enemies, and bosses that need to be in the game.
 
 ### **Iteration Current:**  
+Plans for the next week of this iteration: 
+Tasks Breakdown:
+Develop Other Path (4 hours): Finish left path that introduces players to the game, going a longer way around before getting to the dungeon
+Testing (2 hours): Test new additions for bugs and integration issues.
+Team Assignments:
+Michael : Begin making the mechanics and features of the boss battle.
+Nathan : Finish creating and implementing the left path.
+Goals for the Sprint:
+Complete all updates, implimentations and redesigns.
+Make sure all tests pass.
 
-- **Feedback:**  
-  (Summarize stakeholder feedback.)
-
----
-
-### **Retrospective:**  
+### **Retrospective on past weeks:**  
 - **What went well?**  
-  (e.g., Team collaboration was strong.)  
+  Keeping the GitHub updated with up to date files, organized.
 - **What could be improved?**  
-  (e.g., Better estimation of task complexity.)  
+  Meeting in person more often.
 - **Action Items for Next Iteration:**  
-  (e.g., Include buffer time for unplanned tasks.)
+  Focus on finishing boss logic and start finalizing the systems in the game.
 
----
-
-Feel free to adapt this to fit your specific workflow!
