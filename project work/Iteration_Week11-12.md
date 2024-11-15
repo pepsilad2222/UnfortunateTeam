@@ -7,14 +7,16 @@
 3. Finalize the number of rooms, enemies, and bosses that need to be in the game.
 
 ### **Iteration Current:**  
-Plans for the next week of this iteration: 
-Tasks Breakdown:
+#### Plans for the next week of this iteration: 
+#### Tasks Breakdown:
 Develop Other Path (4 hours): Finish left path that introduces players to the game, going a longer way around before getting to the dungeon
+
 Testing (2 hours): Test new additions for bugs and integration issues.
-Team Assignments:
+
+#### Team Assignments:
 Michael : Begin making the mechanics and features of the boss battle.
 Nathan : Finish creating and implementing the left path.
-Goals for the Sprint:
+#### Goals for this iteration:
 Complete all updates, implimentations and redesigns.
 Make sure all tests pass.
 
