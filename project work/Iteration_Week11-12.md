@@ -3,12 +3,10 @@
 
 #### **Goals:**  
 1. Finish implementing a left path players can choose at the start of game, which introduces mechanics of the game to first time players.
+2. Finish deciding and start developing the basic mechanics and features of the boss battle at the end of the game.
+3. Finalize the number of rooms, enemies, and bosses that need to be in the game.
 
-
-### **Iteration Review:**  
-- **Deliverables:**  
-  (List completed tasks and outcomes.  
-  e.g., Functional login page and user registration API.)
+### **Iteration Current:**  
 
 - **Feedback:**  
   (Summarize stakeholder feedback.)
