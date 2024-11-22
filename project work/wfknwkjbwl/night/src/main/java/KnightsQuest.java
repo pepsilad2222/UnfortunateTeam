@@ -1,5 +1,6 @@
 import java.util.*;
 //import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 
 public class KnightsQuest {
@@ -9,6 +10,35 @@ public class KnightsQuest {
     private static boolean gameRunning = true;
     private static Timer timer = new Timer();
     private static boolean waitingForBattleInput = false;
+
+    // World Generation Constants
+    private static final String[] REGION_TYPES = {
+        "Forest", "Mountain", "Desert", "Swamp", "Underground", "Volcanic", "Frozen Wastes"
+    };
+    
+    private static final Map<String, List<String>> REGION_DESCRIPTIONS = new HashMap<>() {{
+        put("Forest", Arrays.asList(
+            "Dense pine trees block most sunlight",
+            "Moss-covered ancient trees create a mystical atmosphere",
+            "Twisted roots create treacherous pathways"
+        ));
+        put("Mountain", Arrays.asList(
+            "Jagged rocky peaks rise menacingly",
+            "Narrow mountain paths wind precariously",
+            "Cold winds whip across barren stone landscapes"
+        ));
+        put("Desert", Arrays.asList(
+            "Endless sand dunes stretch to the horizon",
+            "Scorching heat shimmers above the barren landscape",
+            "Weathered rock formations break the monotony"
+        ));
+        put("Swamp", Arrays.asList(
+            "Murky waters reflect gnarled tree roots",
+            "Thick mist hangs over stagnant pools",
+            "Strange sounds echo through the wetlands"
+        ));
+    }};
+
     
     public static void main(String[] args) {
         System.out.println("Welcome, brave knight! What is your name?");
@@ -22,6 +52,89 @@ public class KnightsQuest {
             System.out.print("> ");
             String input = scanner.nextLine().toLowerCase();
             processCommand(input);
+        }
+    }
+
+
+    private static List<Room> generateRegion(String regionType, int roomCount) {
+        List<Room> rooms = new ArrayList<>();
+        List<String> descriptions = REGION_DESCRIPTIONS.get(regionType);
+        Random rand = new Random();
+
+        for (int i = 0; i < roomCount; i++) {
+            String roomName = regionType + " " + (i + 1);
+            String description = descriptions.get(rand.nextInt(descriptions.size()));
+            Room room = new Room(roomName, description);
+            
+            // Add region-specific enemies and items
+            addRegionSpecificContent(room, regionType);
+            rooms.add(room);
+        }
+
+        return rooms;
+    }
+
+    private static void addRegionSpecificContent(Room room, String regionType) {
+        Map<String, String[]> regionEnemies = new HashMap<>() {{
+            put("Forest", new String[]{"Wolf", "Dark Elf", "Forest Sprite"});
+            put("Mountain", new String[]{"Stone Golem", "Mountain Troll", "Rock Serpent"});
+            put("Desert", new String[]{"Sand Wraith", "Scorpion Knight", "Desert Mirage"});
+            put("Swamp", new String[]{"Swamp Troll", "Bog Spirit", "Poison Lizard"});
+            put("Underground", new String[]{"Cave Troll", "Giant Spider", "Rock Crawler"});
+            put("Volcanic", new String[]{"Lava Golem", "Fire Elemental", "Obsidian Warrior"});
+            put("Frozen Wastes", new String[]{"Ice Golem", "Frost Wolf", "Snow Demon"});
+        }};
+
+        Random rand = new Random();
+        String[] possibleEnemies = regionEnemies.getOrDefault(regionType, new String[]{"Generic Monster"});
+        
+        if (rand.nextDouble() < 0.6) { // 60% chance of enemy
+            String enemyType = possibleEnemies[rand.nextInt(possibleEnemies.length)];
+            Enemy enemy = new Enemy(enemyType, 50 + rand.nextInt(50), 10 + rand.nextInt(10), 
+                generateEnemyAttacks(enemyType), 1, false);
+            room.setEnemy(enemy);
+        }
+    }
+
+    private static void connectRegions(Map<String, Room> existingRooms, List<Room> newRooms) {
+        if (existingRooms.isEmpty()) return;
+
+        Room connectionPoint = new ArrayList<>(existingRooms.values())
+            .get(new Random().nextInt(existingRooms.size()));
+        
+        // Bidirectional connection
+        Room firstNewRoom = newRooms.get(0);
+        connectionPoint.addExit("portal", firstNewRoom);
+        firstNewRoom.addExit("portal", connectionPoint);
+    }
+
+    private static void distributeItems() {
+        Random rand = new Random();
+        List<Room> allRooms = new ArrayList<>(rooms.values());
+
+        // Distribute healing potions
+        for (int i = 0; i < 10; i++) {
+            Room randomRoom = allRooms.get(rand.nextInt(allRooms.size()));
+            randomRoom.addItem(new Item("Healing Potion", "Restores 50 HP"));
+        }
+
+        // Add rare items to specific regions
+        Map<String, String> rareItems = new HashMap<>() {{
+            put("Forest", "Nature's Charm");
+            put("Mountain", "Mountain King's Amulet");
+            put("Desert", "Sand Crystal");
+            put("Swamp", "Swamp Essence");
+        }};
+
+        for (Map.Entry<String, String> entry : rareItems.entrySet()) {
+            List<Room> regionRooms = allRooms.stream()
+                .filter(room -> room.getName().contains(entry.getKey()))
+                .collect(Collectors.toList());
+            
+            if (!regionRooms.isEmpty()) {
+                Room rareItemRoom = regionRooms.get(rand.nextInt(regionRooms.size()));
+                rareItemRoom.addItem(new Item(entry.getValue(), "A mysterious rare item from the " + entry.getKey()));
+            }
         }
     }
     
@@ -261,36 +374,67 @@ public class KnightsQuest {
         // Set player's starting position
         player.setCurrentRoom(bed);
         
-        // Create and initialize the dangerous areas
-        Room forestStart = createStageRooms(1, "Forest Path", new String[]{"Goblin", "Wolf", "Dark Elf"});
-        rooms.put("forest start", forestStart);
-        
-        // Distribute items throughout the game world
-        distributeItems();
-    }
-    
-    
-    private static void distributeItems() {
-        if (rooms.isEmpty()) {
-            System.out.println("No rooms available to distribute items!");
-            return;
-        }
-    
+        // Generate multiple regions using REGION_TYPES
+        Map<String, Room> stageRooms = new HashMap<>();
         Random rand = new Random();
-        List<Room> allRooms = new ArrayList<>(rooms.values());
-    
-        // Distribute healing potions, avoiding the starting village rooms
-        for (int i = 0; i < 5; i++) {
-            Room randomRoom;
-            do {
-                randomRoom = allRooms.get(rand.nextInt(allRooms.size()));
-            } while (randomRoom.getName().startsWith("Village") || 
-                    randomRoom.getName().equals("Your Bed") || 
-                    randomRoom.getName().equals("Blacksmith"));
+        
+        for (String regionType : REGION_TYPES) {
+            List<Room> regionRooms = generateRegion(regionType, 5 + rand.nextInt(5));
             
-            randomRoom.addItem(new Item("Healing Potion", "Restores 50 HP"));
+            // Connect this region to existing regions
+            connectRegions(stageRooms, regionRooms);
+            
+            // Add region rooms to maps and tracking
+            for (Room room : regionRooms) {
+                stageRooms.put(room.getName(), room);
+                rooms.put(room.getName().toLowerCase(), room);
+            }
         }
+        
+        // Generate additional stage rooms
+        String[] forestEnemyTypes = {"Wolf", "Dark Elf", "Forest Sprite"};
+        Room forestStageRooms = createStageRooms(1, "Forest Path", forestEnemyTypes);
+    
+        String[] caveEnemyTypes = {"Cave Troll", "Giant Spider", "Rock Crawler"};
+        Room caveStageRooms = createStageRooms(2, "Dark Cave", caveEnemyTypes);
+    
+        String[] ruinsEnemyTypes = {"Skeleton Warrior", "Ghost", "Cursed Knight"};
+        Room ruinsStageRooms = createStageRooms(3, "Ancient Ruins", ruinsEnemyTypes);
+    
+        String[] undergroundEnemyTypes = {"Cultist", "Dark Priest", "Shadow Beast"};
+        Room undergroundStageRooms = createStageRooms(4, "Underground Temple", undergroundEnemyTypes);
+    
+        String[] darkLordEnemyTypes = {"Demon Guard", "Chaos Knight", "Soul Reaper"};
+        Room darkLordLair = createStageRooms(5, "Dark Lord's Lair", darkLordEnemyTypes);
+
+    // Connect the forest stage rooms to the village gate
+    rooms.get("village gate").addExit("portal", forestStageRooms);
+    forestStageRooms.addExit("portal", rooms.get("village gate"));
+
+    // Optional: Add a boss enemy to the final stage
+    Enemy darkLordBoss = new Enemy("Dark Lord", 200, 30, 
+        generateEnemyAttacks("Soul Reaper"), 5, true);
+    darkLordLair.setEnemy(darkLordBoss);
+
+    rooms.get("village gate").addExit("portal", forestStageRooms);
+    forestStageRooms.addExit("portal", rooms.get("village gate"));
+
+    caveStageRooms.addExit("portal", forestStageRooms);
+    forestStageRooms.addExit("portal", caveStageRooms);
+
+    ruinsStageRooms.addExit("portal", caveStageRooms);
+    caveStageRooms.addExit("portal", ruinsStageRooms);
+
+    undergroundStageRooms.addExit("portal", ruinsStageRooms);
+    ruinsStageRooms.addExit("portal", undergroundStageRooms);
+
+    darkLordLair.addExit("portal", undergroundStageRooms);
+    undergroundStageRooms.addExit("portal", darkLordLair);
+
+    // Distribute items throughout the game world
+    distributeItems();
     }
+
     
     
     
