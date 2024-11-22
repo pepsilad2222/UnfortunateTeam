@@ -37,8 +37,23 @@ public class KnightsQuest {
             "Thick mist hangs over stagnant pools",
             "Strange sounds echo through the wetlands"
         ));
+        put("Underground", Arrays.asList(
+            "Dark tunnels stretch endlessly",
+            "The walls glisten with dampness",
+            "Strange echoes hint at unseen creatures"
+        ));
+        put("Volcanic", Arrays.asList(
+            "Molten lava flows through cracked fissures",
+            "The air is thick with heat and ash",
+            "Erupting geysers spew steam and fire"
+        ));
+        put("Frozen Wastes", Arrays.asList(
+            "An endless expanse of ice and snow",
+            "Biting winds whip through the frozen air",
+            "Glittering icicles hang from jagged cliffs"
+        ));
     }};
-
+    
     
     public static void main(String[] args) {
         System.out.println("Welcome, brave knight! What is your name?");
@@ -58,21 +73,24 @@ public class KnightsQuest {
 
     private static List<Room> generateRegion(String regionType, int roomCount) {
         List<Room> rooms = new ArrayList<>();
-        List<String> descriptions = REGION_DESCRIPTIONS.get(regionType);
+        // Use getOrDefault to provide a fallback description if regionType is missing
+        List<String> descriptions = REGION_DESCRIPTIONS.getOrDefault(regionType, 
+            Arrays.asList("A mysterious and undefined region."));
         Random rand = new Random();
-
+    
         for (int i = 0; i < roomCount; i++) {
             String roomName = regionType + " " + (i + 1);
             String description = descriptions.get(rand.nextInt(descriptions.size()));
             Room room = new Room(roomName, description);
-            
+    
             // Add region-specific enemies and items
             addRegionSpecificContent(room, regionType);
             rooms.add(room);
         }
-
+    
         return rooms;
     }
+    
 
     private static void addRegionSpecificContent(Room room, String regionType) {
         Map<String, String[]> regionEnemies = new HashMap<>() {{
