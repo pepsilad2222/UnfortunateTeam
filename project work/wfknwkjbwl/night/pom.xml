@@ -4,12 +4,11 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>night</groupId>
-  <artifactId>night</artifactId>
+  <groupId>Knight</groupId>
+  <artifactId>Knight</artifactId>
   <version>1.0</version>
 
-  <name>night</name>
-  <!-- FIXME change it to the project's website -->
+  <name>Knight</name>
   <url>http://www.example.com</url>
 
   <properties>
@@ -28,7 +27,7 @@
   </dependencies>
 
   <build>
-    <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+    <pluginManagement>
       <plugins>
         <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
         <plugin>
@@ -71,5 +70,23 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <!-- Adding exec-maven-plugin -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <mainClass>com.example.Main</mainClass>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 </project>
