@@ -285,8 +285,13 @@ public class KnightsQuestTest {
             assertEquals(initialHp - 10, player.getHp());
         }
 
-            // Test 33: Test Player Cannot Move Without Sword
-
+            // Test 33: Test Player Can Use Sword
+            @Test
+            public void testPlayerCanUseSword() {
+                player.addItem(sword);
+                assertTrue(player.hasItem("Sword"));
+                assertEquals(30, player.getDamage()); // Default damage + sword damage
+            }
     
 
     // Test 34: Test Enemy Initialization with Boss Flag
@@ -483,12 +488,11 @@ public class KnightsQuestTest {
         assertTrue(room.getItems().contains(sword));
     }
 
-    // Test 57: Test Dungeon Stage Room Connection
-   // @Test
-   // public void testDungeonStageRoomConnection() {
-      //  KnightsQuest.Room dungeonRoom = KnightsQuest.createStageRooms(1, "Dungeon", new String[]{"Goblin"});
-       // assertEquals("Dungeon 1", dungeonRoom.getName());
-    //}
+    // Test 57: Test Item Description Retrieval
+   @Test
+    public void testItemDescriptionRetrieval() {
+    assertEquals("A sharp blade.", sword.getDescription());
+}
 
     // Test 58: Test Player Defeats All Enemies
     @Test
@@ -567,8 +571,14 @@ public class KnightsQuestTest {
             assertEquals(initialPlayerHp, player.getHp()); // No damage taken
         }
     
-        // Test 66: Test Boss Defeat Unlocks Next Stage
-  
+    // Test 66: Test Room Enemy Nullifies After Defea
+    @Test
+    public void testRoomEnemyNullifiesAfterDefeat() {
+    room.setEnemy(enemy);
+    enemy.setHp(0); // Simulate defeating the enemy
+    room.setEnemy(null); // Remove enemy
+    assertNull(room.getEnemy());
+}
         
     
         // Test 67: Test Safe Room Allows Rest
@@ -591,6 +601,7 @@ public class KnightsQuestTest {
             assertEquals(100, player.getHp()); // HP should reset to full
         }
     
+        // test 70 boss victory condiditon
         @Test
         public void testFinalBossVictoryCondition() {
             KnightsQuest.Enemy boss = new KnightsQuest.Enemy("Dark Lord", 300, 50, new String[]{"Hellfire"}, 2, true);
@@ -598,7 +609,14 @@ public class KnightsQuestTest {
             assertEquals(0, boss.getHp()); // Ensure boss is defeated
         }
         
-    
+        @Test
+        public void testRoomExitDescriptionUpdates() {
+            KnightsQuest.Room exitRoom = new KnightsQuest.Room("Exit Room", "A room with an exit.");
+            room.addExit("north", exitRoom);
+            String description = room.getDescription();
+            assertTrue(description.contains("Exits: north"));
+        }
+        
     
 }
 
