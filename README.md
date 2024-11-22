@@ -27,7 +27,11 @@ Before running the game, make sure you have the following installed:
      ```
     **then type**
    ```bash
-    cd "Initial Code Test"
+    cd wfknwkjbwl
+    ```
+   **then type**
+    ```bash
+    cd night
     ```
    
 3. **Build the project** using Maven:
