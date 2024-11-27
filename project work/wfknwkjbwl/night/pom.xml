@@ -4,17 +4,18 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>Knight</groupId>
-  <artifactId>Knight</artifactId>
+  <groupId>night</groupId>
+  <artifactId>night</artifactId>
   <version>1.0</version>
 
-  <name>Knight</name>
+  <name>night</name>
   <url>http://www.example.com</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>20</maven.compiler.source>
     <maven.compiler.target>20</maven.compiler.target>
+    <junit.version>5.8.1</junit.version>
   </properties>
 
   <dependencies>
@@ -22,6 +23,20 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- JUnit Jupiter API for writing tests -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- JUnit Jupiter Engine for running tests -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -84,7 +99,7 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>com.example.Main</mainClass>
+          <mainClass>ShadowLabyrinth</mainClass>
         </configuration>
       </plugin>
     </plugins>
