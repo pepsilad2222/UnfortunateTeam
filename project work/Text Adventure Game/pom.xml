@@ -41,7 +41,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>Adventure</mainClass> <!-- Change if it's in a package -->
+                    <mainClass>ShadowLabyrinth</mainClass>
                 </configuration>
             </plugin>
         </plugins>
