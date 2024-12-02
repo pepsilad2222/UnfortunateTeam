@@ -255,7 +255,7 @@ public class ShadowLabyrinth {
         }
     }
     
-    static void bossFightWithTimer() {
+static void bossFightWithTimer() {
         typeTextWithCursor("\nYou've reached the final chamber...", 50);
         typeTextWithCursor("The Shadow Wraith materializes before you!", 50);
     
@@ -292,8 +292,11 @@ public class ShadowLabyrinth {
     
             System.out.println();
     
-            String correctDodge = random.nextBoolean() ? "LEFT" : "RIGHT";
-            System.out.println("BOSS ATTACK DIRECTION: " + correctDodge);
+            // Boss attacks in the OPPOSITE direction of where the player should dodge
+            String bossAttackDirection = random.nextBoolean() ? "LEFT" : "RIGHT";
+            String correctDodge = bossAttackDirection.equals("LEFT") ? "RIGHT" : "LEFT";
+            
+            System.out.println("BOSS ATTACK DIRECTION: " + bossAttackDirection);
     
             if (playerDodge.get() == null) {
                 typeTextWithCursor("Too slow! The Shadow Wraith's attack hits you directly!", 50);
@@ -320,11 +323,9 @@ public class ShadowLabyrinth {
             typeTextWithCursor("You go on to live happily ever after....", 50);
             typeTextWithCursor("Or so you think....", 50);
             typeTextWithCursor("You seem to find yourself stuck in an endless loop...", 50);
-            typeTextWithCursor("Everytime you come cose to saving your love you seem to repeat everything all over again....", 50);
+            typeTextWithCursor("Everytime you come close to saving your love you seem to repeat everything all over again....", 50);
             typeTextWithCursor("Unwavering, you repeat it over and over hoping to save your love.", 50);
             typeTextWithCursor("With no ending in sight, what becomes of our precious knight, the hero who saved his love?", 50);
-
-            
         }
     }
 
