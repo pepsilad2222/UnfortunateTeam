@@ -158,16 +158,16 @@ public class ShadowLabyrinthTest {
         assertEquals("10", potions[1][2]); // Medium Potion price
     }
 
-    // Purchase Tests
     @Test
     public void test18_WeaponPurchaseSuccess() {
         // Tests successful weapon purchase
         String[] weapon = {"Stick Sword", "5", "5"};
         ShadowLabyrinth.purchaseWeapon(weapon);
-        assertEquals(10, ShadowLabyrinth.coins);
-        assertTrue(ShadowLabyrinth.weapons.contains("Stick Sword"));
+        assertEquals(10, ShadowLabyrinth.coins); // Should have 5 coins left (15 - 5)
+        assertTrue(ShadowLabyrinth.weapons.contains("Stick Sword")); 
+        assertEquals("Stick Sword", ShadowLabyrinth.equippedWeapon); // Should auto-equip
+        assertEquals(5, ShadowLabyrinth.weaponDamage); // Should update damage
     }
-
     @Test
     public void test19_ArmorPurchaseSuccess() {
         // Tests successful armor purchase
