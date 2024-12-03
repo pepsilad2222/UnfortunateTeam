@@ -1,0 +1,6 @@
+digraph ShadowLabyrinth {
+  rankdir=LR;
+  node [shape=box, style=filled];
+
+  // Room connections
+}
