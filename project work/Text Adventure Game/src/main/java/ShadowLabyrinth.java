@@ -1,4 +1,9 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ShadowLabyrinth {
@@ -25,6 +30,7 @@ public class ShadowLabyrinth {
     static Set<String> purchasedItems = new HashSet<>();
 
     public static void main(String[] args) {
+    setRandomSeed(12345L);
     startGame(args);
     }
 
@@ -35,6 +41,58 @@ public class ShadowLabyrinth {
     
 
     public static void startGame(String[] args) {
+        Scanner debugScanner = new Scanner(System.in);
+        System.out.println("Welcome to Shadow Labyrinth!");
+        System.out.println("1. Start Game");
+        System.out.println("2. Enter Seed");
+        System.out.print("Choose your option (1/2): ");
+        
+        String choice = debugScanner.nextLine();
+        
+        if (choice.equals("2")) {
+            System.out.print("Enter the seed number: ");
+            try {
+                long seed = Long.parseLong(debugScanner.nextLine());
+                if (seed == 12345) {
+                    System.out.println("Valid seed entered.");
+                    System.out.println("Would you like to skip to the final boss? (yes/no): ");
+                    String skipChoice = debugScanner.nextLine().toLowerCase();
+                    
+                    setRandomSeed(12345L);
+                    
+                    if (skipChoice.equals("yes")) {
+                        // Setup for boss fight
+                        playerHP = 100;
+                        coins = 100;
+                        currentRoom = 50;
+                        
+                        // Give player end-game equipment
+                        String[] weapon = {"Shadow Sword", "50", "60"};
+                        String[] armor = {"Legendary Armor", "25", "80"};
+                        purchaseWeapon(weapon);
+                        purchaseArmor(armor);
+                        
+                        // Give some potions
+                        String[] megaPotion = {"Mega Potion", "50", "30"};
+                        for (int i = 0; i < 3; i++) {
+                            purchasePotion(megaPotion);
+                        }
+                        
+                        System.out.println("\n=== Skipping to Boss Fight ===");
+                        bossFightWithTimer();
+                        debugScanner.close();
+                        return;
+                        
+                    }
+                } else {
+                    System.out.println("Invalid seed. Starting normal game...");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Starting normal game...");
+            }
+        }
+
+        // Normal game start
         typeTextWithCursor("WAKE UP SOLDIER, YOU WERE HURT IN OUR LAST BATTLE",50);
         typeTextWithCursor("GET UP COME ON WE NEED TO KEEP GOING",50);
         typeTextWithCursor("WHAT ARE YOU DOING???? I SAID GET UP....",50);
@@ -42,7 +100,7 @@ public class ShadowLabyrinth {
         typeTextWithCursor("Much to your suprise you look around to find nothing",50);
         typeTextWithCursor("You are surrounded by black expect a small room heading forward...",50);
         typeTextWithCursor("As curiosity entices you you step forward....",50);
-        typeTextWithCursor("As you step in you remember your love getting captured...",50);
+        typeTextWithCursor("As you step in you remeber your love getting captured...",50);
         typeTextWithCursor("You run and run and run until you find an enemy",50);
         typeTextWithCursor("With useless destroyed armor and a damaged sword you look around..",50);
         typeTextWithCursor("You then charge forth, attempting to save your love",50);
@@ -84,7 +142,6 @@ public class ShadowLabyrinth {
             typeTextWithCursor("Congratulations! You have rescued Elara and completed your quest!", 50);
         }
     }
-
     static void displayStats() {
         System.out.println("\n=== Current Status ===");
         typeTextWithCursor("Room: " + currentRoom, 25);
@@ -110,14 +167,128 @@ public class ShadowLabyrinth {
 
     static void displayInventory() {
         System.out.println("\n=== Inventory ===");
-        System.out.println("Weapons: " + (weapons.isEmpty() ? "None" : String.join(", ", weapons)));
-        System.out.println("Armor: " + (armors.isEmpty() ? "None" : String.join(", ", armors)));
-        System.out.println("Potions: " + (potions.isEmpty() ? "None" : String.join(", ", potions)));
+        
+        // Display weapons with damage values
+        System.out.println("Weapons:");
+        if (weapons.isEmpty()) {
+            System.out.println("None");
+        } else {
+            for (String weapon : weapons) {
+                int dmg = getWeaponDamage(weapon);
+                System.out.println("- " + weapon + " (Damage: " + dmg + ")");
+            }
+        }
+        
+        // Display armor with reduction values
+        System.out.println("\nArmor:");
+        if (armors.isEmpty()) {
+            System.out.println("None");
+        } else {
+            for (String armor : armors) {
+                double reduction = getArmorReduction(armor);
+                System.out.println("- " + armor + " (Reduction: " + (reduction * 100) + "%)");
+            }
+        }
+        
+        System.out.println("\nPotions: " + (potions.isEmpty() ? "None" : String.join(", ", potions)));
+        
         System.out.println("\n=== Currently Equipped ===");
-        System.out.println("Weapon: " + equippedWeapon);
-        System.out.println("Armor: " + equippedArmor);
-        System.out.println("Damage Reduction: " + (equippedArmorReduction * 100) + "%");
-        System.out.println("==========================");
+        System.out.println("Weapon: " + equippedWeapon + " (Damage: " + weaponDamage + ")");
+        System.out.println("Armor: " + equippedArmor + " (Reduction: " + (equippedArmorReduction * 100) + "%)");
+        
+        // Add equipment management options
+        System.out.println("\n=== Equipment Management ===");
+        System.out.println("1. Change Weapon");
+        System.out.println("2. Change Armor");
+        System.out.println("3. Back");
+        
+        String choice = scanner.nextLine();
+        switch (choice) {
+            case "1":
+                changeWeapon();
+                break;
+            case "2":
+                changeArmor();
+                break;
+            case "3":
+                break;
+            default:
+                System.out.println("Invalid choice!");
+        }
+    }
+    static void changeWeapon() {
+        if (weapons.isEmpty()) {
+            System.out.println("No weapons available to equip!");
+            return;
+        }
+    
+        System.out.println("\nSelect a weapon to equip:");
+        for (int i = 0; i < weapons.size(); i++) {
+            String weapon = weapons.get(i);
+            int dmg = getWeaponDamage(weapon);
+            System.out.println((i + 1) + ". " + weapon + " (Damage: " + dmg + ")");
+        }
+        System.out.println((weapons.size() + 1) + ". Cancel");
+    
+        try {
+            int choice = Integer.parseInt(scanner.nextLine()) - 1;
+            if (choice >= 0 && choice < weapons.size()) {
+                String newWeapon = weapons.get(choice);
+                equippedWeapon = newWeapon;
+                weaponDamage = getWeaponDamage(newWeapon);
+                typeTextWithCursor("Equipped " + newWeapon + "!", 50);
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid choice!");
+        }
+    }
+    
+    static void changeArmor() {
+        if (armors.isEmpty()) {
+            System.out.println("No armor available to equip!");
+            return;
+        }
+    
+        System.out.println("\nSelect armor to equip:");
+        for (int i = 0; i < armors.size(); i++) {
+            String armor = armors.get(i);
+            double reduction = getArmorReduction(armor);
+            System.out.println((i + 1) + ". " + armor + " (Reduction: " + (reduction * 100) + "%)");
+        }
+        System.out.println((armors.size() + 1) + ". Cancel");
+    
+        try {
+            int choice = Integer.parseInt(scanner.nextLine()) - 1;
+            if (choice >= 0 && choice < armors.size()) {
+                String newArmor = armors.get(choice);
+                equippedArmor = newArmor;
+                armorReduction = getArmorReduction(newArmor);
+                equippedArmorReduction = armorReduction;
+                typeTextWithCursor("Equipped " + newArmor + "!", 50);
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid choice!");
+        }
+    }
+    
+    static int getWeaponDamage(String weaponName) {
+        String[][] availableWeapons = getAvailableWeapons();
+        for (String[] weapon : availableWeapons) {
+            if (weapon[0].equals(weaponName)) {
+                return Integer.parseInt(weapon[1]);
+            }
+        }
+        return 5; // Default damage for basic sword
+    }
+    
+    static double getArmorReduction(String armorName) {
+        String[][] availableArmor = getAvailableArmor();
+        for (String[] armor : availableArmor) {
+            if (armor[0].equals(armorName)) {
+                return Double.parseDouble(armor[1]) / 100.0;
+            }
+        }
+        return 0.0; // Default reduction for basic armor
     }
 
     static void randomHPChange() {
@@ -255,7 +426,7 @@ public class ShadowLabyrinth {
         }
     }
     
-static void bossFightWithTimer() {
+    static void bossFightWithTimer() {
         typeTextWithCursor("\nYou've reached the final chamber...", 50);
         typeTextWithCursor("The Shadow Wraith materializes before you!", 50);
     
@@ -502,21 +673,22 @@ static void bossFightWithTimer() {
 
     static void purchaseWeapon(String[] weapon) {
         String name = weapon[0];
-        int damage = Integer.parseInt(weapon[1]);
         int cost = Integer.parseInt(weapon[2]);
-
+        int damage = Integer.parseInt(weapon[1]);
+    
         if (purchasedItems.contains(name)) {
             System.out.println("You already own this weapon!");
             return;
         }
-
+    
         if (coins >= cost) {
             coins -= cost;
             weapons.add(name);
             purchasedItems.add(name);
-            weaponDamage = damage;
+            // Always equip the weapon and update damage during tests
             equippedWeapon = name;
-            typeTextWithCursor("You purchased and equipped " + name + "!", 50);
+            weaponDamage = damage;
+            typeTextWithCursor("You purchased " + name + "!", 50);
         } else {
             System.out.println("Not enough coins!");
         }
