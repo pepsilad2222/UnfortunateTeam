@@ -70,9 +70,9 @@ public class ShadowLabyrinth {
         typeTextWithCursor("WHAT ARE YOU DOING???? I SAID GET UP....",50);
         typeTextWithCursor("You finally awake after all that shouting",50);
         typeTextWithCursor("Much to your suprise you look around to find nothing",50);
-        typeTextWithCursor("You are surrounded by black expect a small room heading forward...",50);
+        typeTextWithCursor("You are surrounded by all black expect a small room heading forward...",50);
         typeTextWithCursor("As curiosity entices you you step forward....",50);
-        typeTextWithCursor("As you step in you remeber your love getting captured...",50);
+        typeTextWithCursor("As you step in you remember your love getting captured...",50);
         typeTextWithCursor("You run and run and run until you find an enemy",50);
         typeTextWithCursor("With useless destroyed armor and a damaged sword you look around..",50);
         typeTextWithCursor("You then charge forth, attempting to save your love",50);
