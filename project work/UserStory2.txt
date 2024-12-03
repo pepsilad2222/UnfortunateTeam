@@ -1,2 +1,2 @@
 User Story 2: Add Functions : 
-I want to defeat enemies so that my choices impact the game and I feel more engaged in the story.
+The boss should be harder, random even. Getting to the final boss after all these rooms and the attacks being randomized sounds like it could be challenging.
