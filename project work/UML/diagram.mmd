@@ -1,0 +1,139 @@
+classDiagram
+    class Player {
+        +int playerHP
+        +int coins
+        +int weaponDamage
+        +double armorReduction
+        +String equippedWeapon
+        +String equippedArmor
+        +equip(Item)
+        +takeDamage(int)
+        +heal(int)
+    }
+    
+    class Item {
+        <<abstract>>
+        +String name
+        +int cost
+    }
+    
+    class Weapon {
+        +int damage
+        +String tier
+        +calculateDamage()
+    }
+    
+    class Armor {
+        +double reduction
+        +String tier
+        +calculateProtection()
+    }
+    
+    class Potion {
+        +int healingAmount
+        +String size
+        +heal()
+    }
+    
+    class Enemy {
+        +int hp
+        +int baseDamage
+        +int maxHP
+        +attackPlayer()
+        +takeDamage(int)
+    }
+    
+    class Combat {
+        +boolean isCritical
+        +calculateDamage()
+        +processTurn()
+        +checkFlee()
+    }
+    
+    class Shop {
+        +List~Item~ inventory
+        +displayItems()
+        +purchase(Item)
+        +getTierItems(int)
+    }
+    
+    class GameState {
+        +int currentRoom
+        +boolean hasRescuedElara
+        +processRoom()
+        +checkProgress()
+        +generateChallenge()
+    }
+
+    class Challenge {
+        +MathChallenge
+        +BossFight
+        +generateProblem()
+        +checkAnswer()
+        +processBossFight()
+    }
+
+    class Inventory {
+        +List~Weapon~ weapons
+        +List~Armor~ armors
+        +List~Potion~ potions
+        +addItem(Item)
+        +removeItem(Item)
+        +equipItem(Item)
+    }
+
+    class WeaponTier {
+        <<enumeration>>
+        STICK
+        LEAF
+        STONE
+        IRON
+        STEEL
+        DIAMOND
+        OBSIDIAN
+        DRAGON
+        SHADOW
+    }
+
+    class ArmorTier {
+        <<enumeration>>
+        STICK
+        LEAD
+        IRON
+        BRONZE
+        SILVER
+        GOLD
+        PLATINUM
+        TITANIUM
+        MYTHIC
+        LEGENDARY
+    }
+
+    class PotionSize {
+        <<enumeration>>
+        SMALL
+        MEDIUM
+        LARGE
+        MEGA
+        ULTRA
+        SUPREME
+    }
+
+    Item <|-- Weapon
+    Item <|-- Armor
+    Item <|-- Potion
+
+    Player --> Inventory : has
+    Player --> Item : equips
+    Enemy --> Combat : participates
+    Player --> Combat : participates
+    GameState --> Challenge : contains
+    GameState --> Shop : manages
+    Shop --> Item : sells
+    Inventory --> Item : stores
+    Combat --> Weapon : uses
+    Combat --> Armor : uses
+    Combat --> Potion : uses
+    Weapon --> WeaponTier : has
+    Armor --> ArmorTier : has
+    Potion --> PotionSize : has
