@@ -732,7 +732,7 @@ public class ShadowLabyrinth {
         
             static int calculatePlayerDamage() {
                 int baseDamage = weaponDamage;
-                boolean isCrit = random.nextInt(100) < 25; // 25% crit chance
+                boolean isCrit = random.nextInt(100) < 15; // 15% crit chance
                 if (isCrit) {
                     typeTextWithCursor("Critical hit!", 50);
                     return baseDamage * 2;
