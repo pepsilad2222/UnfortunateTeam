@@ -86,18 +86,7 @@ Before running the game, make sure you have the following installed:
     cd Text Adventure Game
     ```
     
-3. **Build the project** using Maven:
-    ```bash
-    mvn clean install
-    ```
-
-4. **Running Tests** using Maven:
-    The game includes a suite of tests to ensure functionality. To run these tests, execute:
-    ```bash
-    mvn test
-    ```
-
-5. **Run the game**:
+3. **Run the game**:
     After the build completes, you can start the game by running this command in the `command line`:
     ```bash
     mvn compile exec:java
@@ -107,6 +96,4 @@ Before running the game, make sure you have the following installed:
 
 ### How to Play
 - **Objective**: Fight the enemies, Buy new items from the shop, Save the love of your life.
-- **Inventory Management**: View your inventory and see whats in it.
-
 ---
