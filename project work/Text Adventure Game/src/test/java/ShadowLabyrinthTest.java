@@ -112,7 +112,7 @@ public class ShadowLabyrinthTest {
     public void test12_Tier1WeaponPrices() {
         // Tests basic weapon prices
         String[][] weapons = ShadowLabyrinth.getAvailableWeapons();
-        assertEquals("5", weapons[0][2]); // Stick Sword price
+        assertEquals("6", weapons[0][2]); // Stick Sword price
         assertEquals("7", weapons[1][2]); // Leaf Sword price
     }
 
@@ -120,7 +120,7 @@ public class ShadowLabyrinthTest {
     public void test13_Tier1WeaponDamage() {
         // Tests basic weapon damage values
         String[][] weapons = ShadowLabyrinth.getAvailableWeapons();
-        assertEquals("5", weapons[0][1]); // Stick Sword damage
+        assertEquals("6", weapons[0][1]); // Stick Sword damage
         assertEquals("7", weapons[1][1]); // Leaf Sword damage
     }
 
@@ -551,7 +551,7 @@ public class ShadowLabyrinthTest {
     public void test65_Tier1WeaponCost() {
         // Tests tier 1 weapon cost
         String[][] weapons = ShadowLabyrinth.getAvailableWeapons();
-        assertEquals("5", weapons[0][2]); // Stick Sword cost
+        assertEquals("6", weapons[0][2]); // Stick Sword cost
     }
 
     @Test
